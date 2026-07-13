@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta charset="utf-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Terminal Kasir - Toko Buah Mas Ali</title>
     <link rel="stylesheet" href="{{ asset('css/globals.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -15,7 +17,8 @@
 </head>
 <body class="m-0 p-0 bg-[#f9f9ff] font-sans antialiased">
 <div class="flex h-screen w-full items-start overflow-hidden relative">
-    
+
+    {{-- SIDEBAR --}}
     <div class="flex flex-col w-[260px] h-full items-start justify-between px-4 py-6 bg-[#f2f3fc] border-r border-[#c2c6d4] box-border shrink-0">
         <div class="w-full flex flex-col items-start">
             <div class="px-2 w-full box-border">
@@ -23,15 +26,15 @@
                     Toko Buah Mas Ali <span class="text-sm font-medium text-[#424752] block opacity-70">Panel Kasir</span>
                 </p>
             </div>
-            
+
             <div class="mt-8 w-full flex flex-col gap-2">
-                <a href="#" class="flex items-center gap-3 px-4 py-3 bg-[#0056b3] rounded-lg text-decoration-none transition-all duration-200 group">
+                <a href="{{ route('kasir.dashboard') }}" class="flex items-center gap-3 px-4 py-3 bg-[#0056b3] rounded-lg text-decoration-none transition-all duration-200 group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-[#bbd0ff]">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                     </svg>
                     <span class="text-[#bbd0ff] text-base font-medium">Transaksi</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
+                <a href="{{ route('kasir.riwayat') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-[#434751]">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 9h3.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
@@ -59,189 +62,443 @@
         </div>
     </div>
 
+    {{-- MAIN: DAFTAR PRODUK --}}
     <div class="flex flex-col flex-1 h-full bg-[#f9f9ff] overflow-hidden">
-        
+
         <div class="flex h-16 items-center justify-between px-6 bg-[#f9f9ff] border-b border-[#c2c6d4] shrink-0 box-border">
             <div class="relative w-full max-w-md flex items-center">
-                <input class="w-full bg-white rounded-lg border border-[#c2c6d4] py-2 pl-10 pr-4 text-gray-700 text-sm focus:outline-none focus:border-[#0056b3] shadow-sm box-border" placeholder="Search products or scan barcode..." type="text" />
+                <input id="search-input" class="w-full bg-white rounded-lg border border-[#c2c6d4] py-2 pl-10 pr-4 text-gray-700 text-sm focus:outline-none focus:border-[#0056b3] shadow-sm box-border" placeholder="Cari produk..." type="text" />
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[18px] h-[18px] text-gray-400 absolute left-3 pointer-events-none">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.602 10.602Z" />
                 </svg>
             </div>
-            
+
             <div class="flex items-center gap-6 select-none">
-                <button class="bg-transparent border-0 flex items-center gap-1.5 px-2 py-1 cursor-pointer rounded hover:bg-[#ededf6] transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-[#424752]">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                    </svg>
-                    <span class="text-[#424752] text-xs font-semibold">SYNC</span>
-                </button>
-                
-                <div class="relative cursor-pointer p-1 rounded hover:bg-[#ededf6] transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-[#424752]">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-                    </svg>
-                    <span class="absolute top-1 right-1 w-2 h-2 bg-[#ba1a1a] rounded-full"></span>
-                </div>
-                
-                <div class="w-px h-6 bg-[#c2c6d4]"></div>
-                
                 <div class="flex flex-col items-end text-right">
                     <span class="text-[#003f87] text-xs font-bold tracking-wider">KASIR: {{ strtoupper(auth()->user()->name ?? 'SITI AMINAH') }}</span>
-                    <span class="text-[#424752] text-[10px] font-medium opacity-80 mt-0.5">SESSION: {{ date('H:i:s') }}</span>
+                    <span id="session-clock" class="text-[#424752] text-[10px] font-medium opacity-80 mt-0.5">{{ now()->format('H:i:s') }}</span>
                 </div>
             </div>
         </div>
 
         <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 box-border">
-            
-            <div class="w-full flex items-center gap-3 overflow-x-auto pb-2 border-b border-transparent">
-                <button class="px-5 py-2.5 bg-[#003f87] text-white font-bold text-sm rounded-xl border-0 shadow-sm cursor-pointer whitespace-nowrap">All Items</button>
-                <button class="px-5 py-2.5 bg-[#e7e8f0] text-[#424752] font-bold text-sm rounded-xl border-0 hover:bg-[#dcdde6] transition-colors cursor-pointer whitespace-nowrap">Food & Bakery</button>
-                <button class="px-5 py-2.5 bg-[#e7e8f0] text-[#424752] font-bold text-sm rounded-xl border-0 hover:bg-[#dcdde6] transition-colors cursor-pointer whitespace-nowrap">Drinks</button>
-                <button class="px-5 py-2.5 bg-[#e7e8f0] text-[#424752] font-bold text-sm rounded-xl border-0 hover:bg-[#dcdde6] transition-colors cursor-pointer whitespace-nowrap">Snacks</button>
-                <button class="px-5 py-2.5 bg-[#e7e8f0] text-[#424752] font-bold text-sm rounded-xl border-0 hover:bg-[#dcdde6] transition-colors cursor-pointer whitespace-nowrap">Household</button>
-                <button class="px-5 py-2.5 bg-[#e7e8f0] text-[#424752] font-bold text-sm rounded-xl border-0 hover:bg-[#dcdde6] transition-colors cursor-pointer whitespace-nowrap">Personal Care</button>
+
+            <div id="kategori-filter" class="w-full flex items-center gap-3 overflow-x-auto pb-2 border-b border-transparent">
+                <button type="button" data-kategori="all" class="kategori-btn px-5 py-2.5 bg-[#003f87] text-white font-bold text-sm rounded-xl border-0 shadow-sm cursor-pointer whitespace-nowrap">Semua</button>
+                @foreach($kategori as $k)
+                    <button type="button" data-kategori="{{ $k }}" class="kategori-btn px-5 py-2.5 bg-[#e7e8f0] text-[#424752] font-bold text-sm rounded-xl border-0 hover:bg-[#dcdde6] transition-colors cursor-pointer whitespace-nowrap">{{ $k }}</button>
+                @endforeach
             </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                
-                <div class="flex flex-col bg-white rounded-xl overflow-hidden border border-[#c2c6d4] shadow-sm hover:shadow-md transition-shadow duration-200">
-                    <div class="w-full h-32 bg-[#ededf6] overflow-hidden relative">
-                        <img class="w-full h-full object-cover" src="{{ asset('img/image-1.png') }}" alt="Semangka" />
-                    </div>
-                    <div class="p-3 flex flex-col justify-between flex-1 gap-2">
-                        <div>
-                            <div class="font-bold text-[#191c21] text-base leading-snug">Semangka</div>
-                            <div class="text-[#424752] text-sm font-semibold mt-0.5">Rp 15.000</div>
-                        </div>
-                        <div class="flex justify-between items-center pt-2 border-t border-[#f0f0f5]">
-                            <span class="bg-[#93f7ba] text-[#00663c] text-[10px] font-bold px-1.5 py-0.5 rounded-sm">STOCK: 42</span>
-                            <button class="bg-[#0056b3] border-0 p-1.5 rounded-lg text-white hover:bg-[#004694] cursor-pointer flex items-center justify-center transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="flex flex-col bg-white rounded-xl overflow-hidden border border-[#c2c6d4] shadow-sm hover:shadow-md transition-shadow duration-200">
-                    <div class="w-full h-32 bg-[#ededf6] overflow-hidden">
-                        <img class="w-full h-full object-cover" src="{{ asset('img/image-2.png') }}" alt="Apel" />
-                    </div>
-                    <div class="p-3 flex flex-col justify-between flex-1 gap-2">
-                        <div>
-                            <div class="font-bold text-[#191c21] text-base leading-snug">Apel</div>
-                            <div class="text-[#424752] text-sm font-semibold mt-0.5">Rp 35.000</div>
+            <div id="produk-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                @forelse($buah as $item)
+                    <div class="produk-card flex flex-col bg-white rounded-xl overflow-hidden border border-[#c2c6d4] shadow-sm hover:shadow-md transition-shadow duration-200 {{ $item->stokHabis() ? 'opacity-50' : '' }}"
+                         data-nama="{{ strtolower($item->nama_buah) }}"
+                         data-kategori="{{ $item->kategori }}">
+                        <div class="w-full h-28 bg-[#ededf6] overflow-hidden relative flex items-center justify-center">
+                            @if($item->gambar)
+                                <img class="w-full h-full object-cover" src="{{ asset('storage/'.$item->gambar) }}" alt="{{ $item->nama_buah }}" />
+                            @else
+                                <span class="text-4xl">🍎</span>
+                            @endif
                         </div>
-                        <div class="flex justify-between items-center pt-2 border-t border-[#f0f0f5]">
-                            <span class="bg-[#93f7ba] text-[#00663c] text-[10px] font-bold px-1.5 py-0.5 rounded-sm">STOCK: 15</span>
-                            <button class="bg-[#0056b3] border-0 p-1.5 rounded-lg text-white hover:bg-[#004694] cursor-pointer flex items-center justify-center transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col bg-white rounded-xl overflow-hidden border border-[#c2c6d4] shadow-sm hover:shadow-md transition-shadow duration-200 opacity-90">
-                    <div class="w-full h-32 bg-[#ededf6] overflow-hidden">
-                        <img class="w-full h-full object-cover" src="{{ asset('img/image-3.png') }}" alt="Alpukat" />
-                    </div>
-                    <div class="p-3 flex flex-col justify-between flex-1 gap-2">
-                        <div>
-                            <div class="font-bold text-[#191c21] text-base leading-snug">Alpukat</div>
-                            <div class="text-[#424752] text-sm font-semibold mt-0.5">Rp 28.000</div>
-                        </div>
-                        <div class="flex justify-between items-center pt-2 border-t border-[#f0f0f5]">
-                            <span class="bg-[#e7e8f0] text-[#424752] text-[10px] font-bold px-1.5 py-0.5 rounded-sm">STOCK: 120</span>
-                            <button class="bg-[#0056b3] border-0 p-1.5 rounded-lg text-white hover:bg-[#004694] cursor-pointer flex items-center justify-center transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col bg-white rounded-xl overflow-hidden border border-[#c2c6d4] shadow-sm hover:shadow-md transition-shadow duration-200 opacity-90">
-                    <div class="w-full h-32 bg-[#ededf6] overflow-hidden">
-                        <img class="w-full h-full object-cover" src="{{ asset('img/image-4.png') }}" alt="Mangga" />
-                    </div>
-                    <div class="p-3 flex flex-col justify-between flex-1 gap-2">
-                        <div>
-                            <div class="font-bold text-[#191c21] text-base leading-snug">Mangga</div>
-                            <div class="text-[#424752] text-sm font-semibold mt-0.5">Rp 30.000</div>
-                        </div>
-                        <div class="flex justify-between items-center pt-2 border-t border-[#f0f0f5]">
-                            <span class="bg-[#e7e8f0] text-[#424752] text-[10px] font-bold px-1.5 py-0.5 rounded-sm">STOCK: 450</span>
-                            <button class="bg-[#0056b3] border-0 p-1.5 rounded-lg text-white hover:bg-[#004694] cursor-pointer flex items-center justify-center transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                            </button>
+                        <div class="p-3 flex flex-col justify-between flex-1 gap-2">
+                            <div>
+                                <div class="font-bold text-[#191c21] text-base leading-snug">{{ $item->nama_buah }}</div>
+                                <div class="text-[#424752] text-sm font-semibold mt-0.5">Rp {{ number_format($item->harga, 0, ',', '.') }} / {{ $item->satuan }}</div>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 border-t border-[#f0f0f5]">
+                                <span class="{{ $item->stokMenipis() ? 'bg-[#ffe08a] text-[#7a5900]' : ($item->stokHabis() ? 'bg-[#ffb3b3] text-[#7a0000]' : 'bg-[#93f7ba] text-[#00663c]') }} text-[10px] font-bold px-1.5 py-0.5 rounded-sm">
+                                    STOK: {{ $item->stok }}
+                                </span>
+                                <button type="button"
+                                        class="btn-tambah bg-[#0056b3] border-0 p-1.5 rounded-lg text-white hover:bg-[#004694] cursor-pointer flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                        data-id="{{ $item->id }}"
+                                        data-nama="{{ $item->nama_buah }}"
+                                        data-harga="{{ $item->harga }}"
+                                        data-stok="{{ $item->stok }}"
+                                        data-satuan="{{ $item->satuan }}"
+                                        {{ $item->stokHabis() ? 'disabled' : '' }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="flex flex-col bg-white rounded-xl overflow-hidden border border-[#c2c6d4] shadow-sm hover:shadow-md transition-shadow duration-200 opacity-90">
-                    <div class="w-full h-32 bg-[#ededf6] overflow-hidden">
-                        <img class="w-full h-full object-cover" src="{{ asset('img/image-5.png') }}" alt="Jeruk" />
-                    </div>
-                    <div class="p-3 flex flex-col justify-between flex-1 gap-2">
-                        <div>
-                            <div class="font-bold text-[#191c21] text-base leading-snug">Jeruk</div>
-                            <div class="text-[#424752] text-sm font-semibold mt-0.5">Rp 22.000</div>
-                        </div>
-                        <div class="flex justify-between items-center pt-2 border-t border-[#f0f0f5]">
-                            <span class="bg-[#e7e8f0] text-[#424752] text-[10px] font-bold px-1.5 py-0.5 rounded-sm">STOCK: 28</span>
-                            <button class="bg-[#0056b3] border-0 p-1.5 rounded-lg text-white hover:bg-[#004694] cursor-pointer flex items-center justify-center transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
+                @empty
+                    <p class="text-[#424752] col-span-full text-center py-10">Belum ada produk. Silakan tambahkan data buah terlebih dahulu.</p>
+                @endforelse
             </div>
         </div>
     </div>
 
+    {{-- KERANJANG --}}
     <div class="flex flex-col w-[380px] h-full bg-[#f2f3fc] border-l border-[#c2c6d4] shrink-0 box-border justify-between">
-        
+
         <div class="flex flex-col gap-3 p-4 bg-[#f9f9ff] border-b border-[#c2c6d4] box-border">
             <div class="flex items-center justify-between">
-                <span class="font-semibold text-[#191c21] text-lg">Current Sale</span>
-                <button class="bg-transparent border-0 flex items-center gap-1 cursor-pointer text-[#ba1a1a] hover:opacity-80 transition-opacity">
+                <span class="font-semibold text-[#191c21] text-lg">Transaksi Saat Ini</span>
+                <button id="btn-clear" type="button" class="bg-transparent border-0 flex items-center gap-1 cursor-pointer text-[#ba1a1a] hover:opacity-80 transition-opacity">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
-                    <span class="text-xs font-bold tracking-wider">CLEAR</span>
+                    <span class="text-xs font-bold tracking-wider">KOSONGKAN</span>
                 </button>
-            </div>
-            
-            <div class="flex items-center gap-2.5 px-3 py-2 bg-[#ededf6] rounded border border-[#c2c6d4]">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-[#424752]"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
-                <span class="text-[#424752] text-sm font-medium">Walk-in Customer</span>
             </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 box-border">
+        <div id="cart-list" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 box-border">
+            <p id="cart-empty" class="text-center text-sm text-[#424752] opacity-60 mt-8">Keranjang masih kosong.<br>Klik tombol (+) pada produk untuk mulai.</p>
+        </div>
+
+        <div class="p-4 bg-[#f9f9ff] border-t border-[#c2c6d4] flex flex-col gap-3 shadow-[0px_-4px_12px_rgba(0,0,0,0.04)] box-border w-full">
+            <div class="flex items-center justify-between text-sm">
+                <span class="text-[#424752] font-medium">Total Item</span>
+                <span id="total-item" class="font-bold text-[#191c21]">0</span>
+            </div>
+            <div class="flex items-center justify-between text-lg">
+                <span class="text-[#424752] font-semibold">Total Bayar</span>
+                <span id="total-harga" class="font-bold text-[#003f87]">Rp 0</span>
             </div>
 
-        <div class="p-4 bg-[#f9f9ff] border-t border-[#c2c6d4] flex flex-col gap-4 shadow-[0px_-4px_12px_rgba(0,0,0,0.04)] box-border w-full">
-            <div class="flex items-center gap-3 w-full">
-                <button class="flex-1 bg-white border border-[#c2c6d4] rounded-lg py-2.5 flex items-center justify-center gap-1.5 font-bold text-[#424752] text-sm hover:bg-gray-50 transition-colors cursor-pointer box-border">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581a2.25 2.25 0 0 0 3.181 0l4.318-4.318a2.25 2.25 0 0 0 0-3.181l-9.58-9.581A2.25 2.25 0 0 0 9.568 3Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" /></svg>
-                    Promo
-                </button>
-                <button class="flex-1 bg-white border border-[#c2c6d4] rounded-lg py-2.5 flex items-center justify-center gap-1.5 font-bold text-[#424752] text-sm hover:bg-gray-50 transition-colors cursor-pointer box-border">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
-                    Draft
-                </button>
-            </div>
-            
-            <button class="w-full bg-[#003f87] border-0 text-white font-semibold text-lg py-4 rounded-xl flex items-center justify-center gap-3 shadow-md hover:bg-[#00316e] transition-all cursor-pointer box-border">
+            <button id="btn-bayar" type="button" disabled class="w-full bg-[#003f87] disabled:opacity-40 disabled:cursor-not-allowed border-0 text-white font-semibold text-lg py-4 rounded-xl flex items-center justify-center gap-3 shadow-md hover:bg-[#00316e] transition-all cursor-pointer box-border">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75m0 .75v.75m0 .75v.75m0 .75V15h16.5V8.25m-16.5 0h16.5M3.75 8.25v7.5m16.5-7.5V5.25c0-.754-.726-1.294-1.453-1.096A60.065 60.065 0 0 0 3.75 4.5Z" />
                 </svg>
                 <span>Bayar</span>
             </button>
         </div>
-
     </div>
-
 </div>
+
+{{-- MODAL PEMBAYARAN --}}
+<div id="modal-bayar" class="hidden fixed inset-0 bg-black/40 z-40 items-center justify-center">
+    <div class="bg-white rounded-2xl w-[420px] max-w-[90vw] p-6 shadow-xl">
+        <h3 class="text-xl font-bold text-[#191c21] mb-1">Pembayaran</h3>
+        <p class="text-sm text-[#424752] mb-4">Masukkan jumlah uang yang diterima dari pelanggan.</p>
+
+        <div class="bg-[#f2f3fc] rounded-xl p-4 flex items-center justify-between mb-4">
+            <span class="text-sm font-semibold text-[#424752]">Total Belanja</span>
+            <span id="modal-total" class="text-xl font-bold text-[#003f87]">Rp 0</span>
+        </div>
+
+        <label class="block text-sm font-semibold text-[#424752] mb-1">Metode Pembayaran</label>
+        <select id="metode-pembayaran" class="w-full mb-4 border border-[#c2c6d4] rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#0056b3]">
+            <option value="tunai">Tunai</option>
+            <option value="qris">QRIS</option>
+            <option value="debit">Kartu Debit</option>
+        </select>
+
+        <label class="block text-sm font-semibold text-[#424752] mb-1">Jumlah Bayar</label>
+        <input id="input-bayar" type="number" min="0" class="w-full border border-[#c2c6d4] rounded-lg px-3 py-2.5 text-lg font-semibold focus:outline-none focus:border-[#0056b3] mb-2" placeholder="0" />
+
+        <div id="quick-cash" class="flex gap-2 mb-4"></div>
+
+        <div class="flex items-center justify-between mb-4">
+            <span class="text-sm font-semibold text-[#424752]">Kembalian</span>
+            <span id="modal-kembalian" class="text-lg font-bold text-[#00663c]">Rp 0</span>
+        </div>
+
+        <p id="modal-error" class="hidden text-sm text-[#ba1a1a] font-medium mb-3"></p>
+
+        <div class="flex gap-3">
+            <button id="btn-batal-bayar" type="button" class="flex-1 border border-[#c2c6d4] rounded-lg py-3 font-bold text-[#424752] hover:bg-gray-50">Batal</button>
+            <button id="btn-konfirmasi-bayar" type="button" class="flex-1 bg-[#003f87] text-white rounded-lg py-3 font-bold hover:bg-[#00316e] disabled:opacity-40 disabled:cursor-not-allowed">Konfirmasi</button>
+        </div>
+    </div>
+</div>
+
+{{-- MODAL STRUK / RECEIPT --}}
+<div id="modal-struk" class="hidden fixed inset-0 bg-black/40 z-50 items-center justify-center">
+    <div class="bg-white rounded-2xl w-[380px] max-w-[90vw] p-6 shadow-xl text-center">
+        <div class="w-14 h-14 rounded-full bg-[#e5f9ee] text-[#00663c] flex items-center justify-center mx-auto mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+        </div>
+        <h3 class="text-lg font-bold text-[#191c21] mb-1">Transaksi Berhasil</h3>
+        <p id="struk-kode" class="text-sm text-[#424752] mb-4">TRX-000</p>
+
+        <div id="struk-detail" class="text-left bg-[#f9f9ff] rounded-xl p-4 mb-4 max-h-[220px] overflow-y-auto text-sm"></div>
+
+        <div class="text-left text-sm mb-5 space-y-1">
+            <div class="flex justify-between"><span class="text-[#424752]">Total</span><span id="struk-total" class="font-bold">Rp 0</span></div>
+            <div class="flex justify-between"><span class="text-[#424752]">Bayar</span><span id="struk-bayar" class="font-semibold">Rp 0</span></div>
+            <div class="flex justify-between"><span class="text-[#424752]">Kembalian</span><span id="struk-kembalian" class="font-semibold text-[#00663c]">Rp 0</span></div>
+        </div>
+
+        <div class="flex gap-3">
+            <a href="{{ route('kasir.riwayat') }}" class="flex-1 border border-[#c2c6d4] rounded-lg py-3 font-bold text-[#424752] hover:bg-gray-50 text-decoration-none">Lihat Riwayat</a>
+            <button id="btn-transaksi-baru" type="button" class="flex-1 bg-[#003f87] text-white rounded-lg py-3 font-bold hover:bg-[#00316e]">Transaksi Baru</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const storeUrl = "{{ route('kasir.transaksi.store') }}";
+
+    let cart = {}; // { buah_id: { id, nama, harga, qty, stok, satuan } }
+
+    const cartListEl = document.getElementById('cart-list');
+    const cartEmptyEl = document.getElementById('cart-empty');
+    const totalItemEl = document.getElementById('total-item');
+    const totalHargaEl = document.getElementById('total-harga');
+    const btnBayar = document.getElementById('btn-bayar');
+
+    function formatRupiah(angka) {
+        return 'Rp ' + Number(angka || 0).toLocaleString('id-ID');
+    }
+
+    function hitungTotal() {
+        return Object.values(cart).reduce((sum, i) => sum + (i.harga * i.qty), 0);
+    }
+
+    function hitungTotalItem() {
+        return Object.values(cart).reduce((sum, i) => sum + i.qty, 0);
+    }
+
+    function renderCart() {
+        const items = Object.values(cart);
+        cartListEl.innerHTML = '';
+
+        if (items.length === 0) {
+            cartListEl.appendChild(cartEmptyEl);
+            btnBayar.disabled = true;
+        } else {
+            btnBayar.disabled = false;
+            items.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-3 bg-white rounded-lg border border-[#c2c6d4] p-3';
+                row.innerHTML = `
+                    <div class="flex-1 min-w-0">
+                        <div class="font-bold text-[#191c21] text-sm truncate">${item.nama}</div>
+                        <div class="text-[#424752] text-xs">${formatRupiah(item.harga)} / ${item.satuan}</div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" class="btn-qty-min w-7 h-7 rounded-md bg-[#e7e8f0] font-bold text-[#424752] cursor-pointer" data-id="${item.id}">-</button>
+                        <span class="w-6 text-center font-bold text-sm">${item.qty}</span>
+                        <button type="button" class="btn-qty-plus w-7 h-7 rounded-md bg-[#e7e8f0] font-bold text-[#424752] cursor-pointer" data-id="${item.id}">+</button>
+                    </div>
+                    <div class="w-20 text-right font-bold text-sm text-[#003f87]">${formatRupiah(item.harga * item.qty)}</div>
+                    <button type="button" class="btn-hapus text-[#ba1a1a] cursor-pointer" data-id="${item.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+                    </button>
+                `;
+                cartListEl.appendChild(row);
+            });
+        }
+
+        totalItemEl.textContent = hitungTotalItem();
+        totalHargaEl.textContent = formatRupiah(hitungTotal());
+    }
+
+    // Tambah ke keranjang
+    document.querySelectorAll('.btn-tambah').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const stok = parseInt(btn.dataset.stok, 10);
+            if (!cart[id]) {
+                if (stok < 1) return;
+                cart[id] = {
+                    id: id,
+                    nama: btn.dataset.nama,
+                    harga: parseInt(btn.dataset.harga, 10),
+                    satuan: btn.dataset.satuan,
+                    stok: stok,
+                    qty: 1,
+                };
+            } else if (cart[id].qty < stok) {
+                cart[id].qty += 1;
+            }
+            renderCart();
+        });
+    });
+
+    // +/- qty & hapus item (event delegation)
+    cartListEl.addEventListener('click', (e) => {
+        const minus = e.target.closest('.btn-qty-min');
+        const plus = e.target.closest('.btn-qty-plus');
+        const hapus = e.target.closest('.btn-hapus');
+
+        if (minus) {
+            const id = minus.dataset.id;
+            cart[id].qty -= 1;
+            if (cart[id].qty <= 0) delete cart[id];
+            renderCart();
+        }
+        if (plus) {
+            const id = plus.dataset.id;
+            if (cart[id].qty < cart[id].stok) cart[id].qty += 1;
+            renderCart();
+        }
+        if (hapus) {
+            delete cart[hapus.dataset.id];
+            renderCart();
+        }
+    });
+
+    // Kosongkan keranjang
+    document.getElementById('btn-clear').addEventListener('click', () => {
+        cart = {};
+        renderCart();
+    });
+
+    // Filter kategori
+    document.querySelectorAll('.kategori-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.kategori-btn').forEach(b => {
+                b.classList.remove('bg-[#003f87]', 'text-white');
+                b.classList.add('bg-[#e7e8f0]', 'text-[#424752]');
+            });
+            btn.classList.remove('bg-[#e7e8f0]', 'text-[#424752]');
+            btn.classList.add('bg-[#003f87]', 'text-white');
+
+            const kategori = btn.dataset.kategori;
+            document.querySelectorAll('.produk-card').forEach(card => {
+                card.style.display = (kategori === 'all' || card.dataset.kategori === kategori) ? '' : 'none';
+            });
+        });
+    });
+
+    // Search produk
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        const q = e.target.value.trim().toLowerCase();
+        document.querySelectorAll('.produk-card').forEach(card => {
+            card.style.display = card.dataset.nama.includes(q) ? '' : 'none';
+        });
+    });
+
+    // Jam sesi berjalan
+    setInterval(() => {
+        document.getElementById('session-clock').textContent = new Date().toLocaleTimeString('id-ID');
+    }, 1000);
+
+    // ==== MODAL BAYAR ====
+    const modalBayar = document.getElementById('modal-bayar');
+    const inputBayar = document.getElementById('input-bayar');
+    const modalTotal = document.getElementById('modal-total');
+    const modalKembalian = document.getElementById('modal-kembalian');
+    const modalError = document.getElementById('modal-error');
+    const btnKonfirmasi = document.getElementById('btn-konfirmasi-bayar');
+    const quickCashEl = document.getElementById('quick-cash');
+
+    function bukaModalBayar() {
+        const total = hitungTotal();
+        modalTotal.textContent = formatRupiah(total);
+        inputBayar.value = '';
+        modalKembalian.textContent = formatRupiah(0);
+        modalError.classList.add('hidden');
+
+        const opsi = [total, Math.ceil(total / 5000) * 5000 + 5000, Math.ceil(total / 10000) * 10000 + 10000];
+        quickCashEl.innerHTML = [...new Set(opsi)].map(v =>
+            `<button type="button" class="btn-quick-cash flex-1 bg-[#e7e8f0] hover:bg-[#dcdde6] rounded-lg py-2 text-xs font-bold text-[#424752] cursor-pointer" data-value="${v}">${formatRupiah(v)}</button>`
+        ).join('');
+
+        modalBayar.classList.remove('hidden');
+        modalBayar.classList.add('flex');
+    }
+
+    function tutupModalBayar() {
+        modalBayar.classList.add('hidden');
+        modalBayar.classList.remove('flex');
+    }
+
+    quickCashEl.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn-quick-cash');
+        if (btn) {
+            inputBayar.value = btn.dataset.value;
+            inputBayar.dispatchEvent(new Event('input'));
+        }
+    });
+
+    inputBayar.addEventListener('input', () => {
+        const total = hitungTotal();
+        const bayar = parseInt(inputBayar.value || 0, 10);
+        const kembalian = bayar - total;
+        modalKembalian.textContent = formatRupiah(Math.max(kembalian, 0));
+        modalKembalian.className = kembalian < 0 ? 'text-lg font-bold text-[#ba1a1a]' : 'text-lg font-bold text-[#00663c]';
+    });
+
+    document.getElementById('btn-bayar').addEventListener('click', bukaModalBayar);
+    document.getElementById('btn-batal-bayar').addEventListener('click', tutupModalBayar);
+
+    btnKonfirmasi.addEventListener('click', async () => {
+        const total = hitungTotal();
+        const bayar = parseInt(inputBayar.value || 0, 10);
+
+        if (!bayar || bayar < total) {
+            modalError.textContent = 'Jumlah bayar kurang dari total belanja.';
+            modalError.classList.remove('hidden');
+            return;
+        }
+
+        btnKonfirmasi.disabled = true;
+        btnKonfirmasi.textContent = 'Memproses...';
+
+        try {
+            const response = await fetch(storeUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: JSON.stringify({
+                    items: Object.values(cart).map(i => ({ buah_id: i.id, qty: i.qty })),
+                    bayar: bayar,
+                    metode_pembayaran: document.getElementById('metode-pembayaran').value,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                modalError.textContent = result.message || 'Terjadi kesalahan, coba lagi.';
+                modalError.classList.remove('hidden');
+                btnKonfirmasi.disabled = false;
+                btnKonfirmasi.textContent = 'Konfirmasi';
+                return;
+            }
+
+            tutupModalBayar();
+            tampilkanStruk(result.transaksi);
+            cart = {};
+            renderCart();
+        } catch (err) {
+            modalError.textContent = 'Gagal menghubungi server. Periksa koneksi Anda.';
+            modalError.classList.remove('hidden');
+        } finally {
+            btnKonfirmasi.disabled = false;
+            btnKonfirmasi.textContent = 'Konfirmasi';
+        }
+    });
+
+    // ==== MODAL STRUK ====
+    const modalStruk = document.getElementById('modal-struk');
+
+    function tampilkanStruk(trx) {
+        document.getElementById('struk-kode').textContent = trx.kode_transaksi + ' • ' + trx.created_at;
+        document.getElementById('struk-total').textContent = formatRupiah(trx.total_harga);
+        document.getElementById('struk-bayar').textContent = formatRupiah(trx.bayar);
+        document.getElementById('struk-kembalian').textContent = formatRupiah(trx.kembalian);
+
+        document.getElementById('struk-detail').innerHTML = trx.items.map(i => `
+            <div class="flex justify-between py-1">
+                <span class="text-[#424752]">${i.nama_buah} x${i.qty}</span>
+                <span class="font-semibold">${formatRupiah(i.subtotal)}</span>
+            </div>
+        `).join('');
+
+        modalStruk.classList.remove('hidden');
+        modalStruk.classList.add('flex');
+    }
+
+    document.getElementById('btn-transaksi-baru').addEventListener('click', () => {
+        modalStruk.classList.add('hidden');
+        modalStruk.classList.remove('flex');
+        // Reload agar data stok produk yang tampil ter-update
+        window.location.reload();
+    });
+
+    renderCart();
+})();
+</script>
 </body>
 </html>

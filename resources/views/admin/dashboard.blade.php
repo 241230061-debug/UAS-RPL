@@ -28,14 +28,14 @@
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 bg-[#0056b3] rounded-lg text-decoration-none transition-all duration-200">
                     <span class="text-[#bbd0ff] text-base font-medium">Dashboard</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
-                    <span class="text-base font-medium">Data Buah</span>
+                <a href="{{ route('admin.buah.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
+                    <span class="text-base font-medium">Data Master</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
+                <a href="{{ route('admin.restok.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
+                    <span class="text-base font-medium">Pembelian & Restok</span>
+                </a>
+                <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
                     <span class="text-base font-medium">Manajemen Pengguna</span>
-                </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
-                    <span class="text-base font-medium">Buah Rusak / Busuk</span>
                 </a>
             </div>
         </div>
@@ -69,7 +69,7 @@
             <div class="w-full bg-white rounded-xl border border-[#c2c6d4] p-6 box-border">
                 <p class="m-0 text-[#191c21] font-bold text-base">Selamat datang, {{ auth()->user()->name }} 👋</p>
                 <p class="mt-2 text-[#424752] text-sm">
-                    Modul Data Buah, Manajemen Pengguna, dan Laporan Buah Rusak akan tersedia di tahap pengembangan berikutnya.
+                    Gunakan menu di kiri untuk mengelola Data Buah, Manajemen Pengguna (admin dan kasir), serta Pembelian & Restok.
                 </p>
             </div>
         </div>
