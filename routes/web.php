@@ -6,10 +6,11 @@ use App\Http\Controllers\Admin\RestokController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Kasir\KasirController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return auth()->check() ? redirect()->route('dashboard') : redirect()->route('login');
+    return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
 });
 
 // Rute untuk tamu (belum login)
@@ -22,9 +23,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Rute netral yang mengarahkan ke dashboard sesuai role (dipakai oleh middleware "guest" bawaan Laravel)
+    // Rute netral yang mengarahkan ke dashboard sesuai role
     Route::get('/dashboard', function () {
-        return match (auth()->user()->role) {
+        return match (Auth::user()->role) {
             'admin' => redirect()->route('admin.dashboard'),
             'kasir' => redirect()->route('kasir.dashboard'),
             default => redirect('/'),
