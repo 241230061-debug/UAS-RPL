@@ -1,127 +1,55 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta charset="utf-8" />
-    <title>Manajemen Pengguna - Toko Buah Mas Ali</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            corePlugins: { preflight: false },
-            theme: { extend: {} },
-            plugins: [],
-        }
-    </script>
-</head>
-<body class="m-0 p-0 bg-[#f9f9ff] font-sans antialiased">
-<div class="flex h-screen w-full items-start overflow-hidden relative">
-    <div class="flex flex-col w-[260px] h-full items-start justify-between px-4 py-6 bg-[#f2f3fc] border-r border-[#c2c6d4] box-border shrink-0">
-        <div class="w-full flex flex-col items-start">
-            <div class="px-2 w-full box-border">
-                <p class="m-0 font-bold text-[#003f87] text-xl xl:text-2xl leading-8">
-                    Toko Buah Mas Ali <span class="text-sm font-medium text-[#424752] block opacity-70">Panel Admin</span>
-                </p>
-            </div>
-            <div class="mt-8 w-full flex flex-col gap-2">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
-                    <span class="text-base font-medium">Dashboard</span>
-                </a>
-                <a href="{{ route('admin.buah.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
-                    <span class="text-base font-medium">Data Buah</span>
-                </a>
-                <a href="{{ route('admin.restok.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
-                    <span class="text-base font-medium">Pembelian & Restok</span>
-                </a>
-                <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-4 py-3 bg-[#0056b3] rounded-lg text-decoration-none text-[#bbd0ff] transition-all duration-200">
-                    <span class="text-base font-medium">Manajemen Pengguna</span>
-                </a>
-            </div>
-        </div>
-        <div class="w-full pt-4 border-t border-[#c2c6d4] box-border">
-            <div class="flex items-center gap-3 px-2">
-                <div class="flex w-10 h-10 shrink-0 items-center justify-center bg-[#0056b3] rounded-xl text-[#bbd0ff] font-bold shadow-sm">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'Ad', 0, 2)) }}
-                </div>
-                <div class="flex flex-col overflow-hidden">
-                    <div class="font-bold text-[#191c21] text-sm leading-5 truncate">{{ auth()->user()->name ?? 'Admin' }}</div>
-                    <div class="font-medium text-[#424752] text-xs leading-4 opacity-80">{{ ucfirst(auth()->user()->role ?? 'Admin') }}</div>
-                </div>
-            </div>
-            <form method="POST" action="{{ route('logout') }}" class="mt-3">
-                @csrf
-                <button type="submit" class="w-full text-left px-2 py-2 text-[#ba1a1a] text-sm font-semibold rounded-lg hover:bg-[#fdecec] border-0 bg-transparent cursor-pointer">
-                    Keluar
-                </button>
-            </form>
-        </div>
-    </div>
+@extends('layouts.admin')
 
-    <div class="flex flex-col flex-1 h-full bg-[#f9f9ff] overflow-hidden">
-        <div class="flex h-16 items-center justify-between px-6 bg-[#f9f9ff] border-b border-[#c2c6d4] shrink-0 box-border">
-            <div>
-                <p class="m-0 font-bold text-[#191c21] text-lg">Manajemen Pengguna</p>
-                <p class="text-[#424752] text-sm mt-1">Kelola admin dan kasir dari database.</p>
-            </div>
-            <span class="text-[#424752] text-xs font-medium">{{ now()->translatedFormat('l, d F Y') }}</span>
-        </div>
+@section('title', 'Manajemen Pengguna')
+@section('page_title', 'Manajemen Pengguna')
+@section('page_description', 'Kelola admin dan kasir dari database.')
 
-        <div class="flex-1 overflow-y-auto p-6 box-border">
-            @if(session('success'))
-                <div class="mb-4 rounded-2xl border border-[#c2e8d1] bg-[#e9f7ef] p-4 text-sm text-[#14532d]">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="mb-4 rounded-2xl border border-[#f5d1d1] bg-[#fff1f0] p-4 text-sm text-[#842029]">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            <div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-                <div class="rounded-3xl bg-white border border-[#c2c6d4] p-6 shadow-sm">
-                    <h2 class="text-base font-bold text-[#191c21] mb-4">Tambah Pengguna Baru</h2>
+@section('content')
+<div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+                <div class="rounded-2xl bg-white border border-slate-200 p-6 shadow-sm">
+                    <h2 class="text-base font-bold text-slate-900 mb-4">Tambah Pengguna Baru</h2>
                     <form action="{{ route('admin.users.store') }}" method="POST" class="space-y-4">
                         @csrf
                         <div>
-                            <label class="block mb-2 text-sm font-semibold text-[#424752]">Nama</label>
-                            <input type="text" name="name" value="{{ old('name') }}" class="w-full rounded-xl border border-[#c2c6d4] px-3 py-3 text-sm" required>
-                            @error('name')<p class="mt-1 text-xs text-[#ba1a1a]">{{ $message }}</p>@enderror
+                            <label class="block mb-2 text-sm font-semibold text-slate-700">Nama</label>
+                            <input type="text" name="name" value="{{ old('name') }}" class="w-full rounded-xl border border-slate-300 px-3 py-3 text-sm" required>
+                            @error('name')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                         </div>
                         <div>
-                            <label class="block mb-2 text-sm font-semibold text-[#424752]">Email</label>
-                            <input type="email" name="email" value="{{ old('email') }}" class="w-full rounded-xl border border-[#c2c6d4] px-3 py-3 text-sm" required>
-                            @error('email')<p class="mt-1 text-xs text-[#ba1a1a]">{{ $message }}</p>@enderror
+                            <label class="block mb-2 text-sm font-semibold text-slate-700">Email</label>
+                            <input type="email" name="email" value="{{ old('email') }}" class="w-full rounded-xl border border-slate-300 px-3 py-3 text-sm" required>
+                            @error('email')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                         </div>
                         <div class="grid gap-4 md:grid-cols-2">
                             <div>
-                                <label class="block mb-2 text-sm font-semibold text-[#424752]">Password</label>
-                                <input type="password" name="password" class="w-full rounded-xl border border-[#c2c6d4] px-3 py-3 text-sm" required>
-                                @error('password')<p class="mt-1 text-xs text-[#ba1a1a]">{{ $message }}</p>@enderror
+                                <label class="block mb-2 text-sm font-semibold text-slate-700">Password</label>
+                                <input type="password" name="password" class="w-full rounded-xl border border-slate-300 px-3 py-3 text-sm" required>
+                                @error('password')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                             </div>
                             <div>
-                                <label class="block mb-2 text-sm font-semibold text-[#424752]">Konfirmasi Password</label>
-                                <input type="password" name="password_confirmation" class="w-full rounded-xl border border-[#c2c6d4] px-3 py-3 text-sm" required>
+                                <label class="block mb-2 text-sm font-semibold text-slate-700">Konfirmasi Password</label>
+                                <input type="password" name="password_confirmation" class="w-full rounded-xl border border-slate-300 px-3 py-3 text-sm" required>
                             </div>
                         </div>
                         <div>
-                            <label class="block mb-2 text-sm font-semibold text-[#424752]">Role</label>
-                            <select name="role" class="w-full rounded-xl border border-[#c2c6d4] px-3 py-3 text-sm" required>
+                            <label class="block mb-2 text-sm font-semibold text-slate-700">Role</label>
+                            <select name="role" class="w-full rounded-xl border border-slate-300 px-3 py-3 text-sm" required>
                                 <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
                                 <option value="kasir" {{ old('role') === 'kasir' ? 'selected' : '' }}>Kasir</option>
                             </select>
-                            @error('role')<p class="mt-1 text-xs text-[#ba1a1a]">{{ $message }}</p>@enderror
+                            @error('role')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                         </div>
-                        <button type="submit" class="rounded-xl bg-[#003f87] px-5 py-3 text-sm font-semibold text-white hover:bg-[#00316e]">Tambah Pengguna</button>
+                        <button type="submit" class="rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white hover:bg-brand-700">Tambah Pengguna</button>
                     </form>
                 </div>
 
-                <div class="rounded-3xl bg-white border border-[#c2c6d4] p-6 shadow-sm">
-                    <h2 class="text-base font-bold text-[#191c21] mb-4">Daftar Pengguna</h2>
+                <div class="rounded-2xl bg-white border border-slate-200 p-6 shadow-sm">
+                    <h2 class="text-base font-bold text-slate-900 mb-4">Daftar Pengguna</h2>
                     @if($users->count())
-                        <div class="overflow-x-auto rounded-3xl border border-[#e7e8f0] bg-[#f9f9ff] p-4">
-                            <table class="min-w-full text-left text-sm text-[#424752]">
+                        <div class="overflow-x-auto rounded-2xl border border-slate-300 bg-slate-50 p-4">
+                            <table class="min-w-full text-left text-sm text-slate-700">
                                 <thead>
-                                    <tr class="border-b border-[#d8dbe5]">
+                                    <tr class="border-b border-slate-200">
                                         <th class="px-4 py-3 font-semibold">Nama</th>
                                         <th class="px-4 py-3 font-semibold">Email</th>
                                         <th class="px-4 py-3 font-semibold">Role</th>
@@ -130,18 +58,18 @@
                                 </thead>
                                 <tbody>
                                     @foreach($users as $user)
-                                        <tr class="border-b border-[#e7e8f0] last:border-0">
+                                        <tr class="border-b border-slate-200 last:border-0">
                                             <td class="px-4 py-4">{{ $user->name }}</td>
                                             <td class="px-4 py-4">{{ $user->email }}</td>
                                             <td class="px-4 py-4 uppercase">{{ $user->role }}</td>
                                             <td class="px-4 py-4">
                                                 <div class="flex flex-wrap items-center gap-2">
-                                                    <a href="{{ route('admin.users.edit', $user) }}" class="inline-flex items-center gap-2 rounded-xl border border-[#c2c6d4] bg-white px-4 py-2 text-sm font-semibold text-[#424752] hover:bg-[#e4e6f2] transition-all duration-200">Edit</a>
+                                                    <a href="{{ route('admin.users.edit', $user) }}" class="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-all duration-200">Edit</a>
                                                     @if($user->id !== auth()->id())
                                                         <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline-block">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" onclick="return confirm('Hapus pengguna ini?')" class="rounded-xl bg-[#ba1a1a] px-4 py-2 text-sm font-semibold text-white hover:bg-[#981515] transition-all duration-200">Hapus</button>
+                                                            <button type="submit" onclick="return confirm('Hapus pengguna ini?')" class="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition-all duration-200">Hapus</button>
                                                         </form>
                                                     @endif
                                                 </div>
@@ -152,7 +80,7 @@
                             </table>
                         </div>
                     @else
-                        <div class="rounded-2xl border border-[#e7e8f0] bg-[#f9f9ff] p-6 text-center text-[#424752]">
+                        <div class="rounded-2xl border border-slate-300 bg-slate-50 p-6 text-center text-slate-700">
                             Belum ada pengguna.
                         </div>
                     @endif
@@ -162,7 +90,4 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-</body>
-</html>
+@endsection

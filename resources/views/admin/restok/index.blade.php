@@ -1,97 +1,11 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta charset="utf-8" />
-    <title>Kelola Pembelian & Restok - Toko Buah Mas Ali</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f4fa',
-                            100: '#dbe5f5',
-                            500: '#0056b3',
-                            600: '#003f87',
-                            700: '#002d66',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-<body class="m-0 p-0 bg-slate-50 font-sans antialiased text-slate-800">
-<div class="flex h-screen w-full items-start overflow-hidden relative">
-    
-    <!-- SIDEBAR -->
-    <div class="flex flex-col w-[260px] h-full items-start justify-between px-4 py-6 bg-slate-100 border-r border-slate-200 box-border shrink-0 hidden md:flex">
-        <div class="w-full flex flex-col items-start">
-            <div class="px-2 w-full box-border">
-                <p class="m-0 font-bold text-brand-600 text-xl xl:text-2xl leading-tight">
-                    Toko Buah Mas Ali 
-                    <span class="text-xs font-semibold text-slate-500 block uppercase tracking-wider mt-1">Panel Admin</span>
-                </p>
-            </div>
-            <div class="mt-8 w-full flex flex-col gap-1">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-200/70 rounded-xl text-slate-600 no-underline font-medium transition-all duration-200">
-                    <span>Dashboard</span>
-                </a>
-                <a href="{{ route('admin.buah.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-200/70 rounded-xl text-slate-600 no-underline font-medium transition-all duration-200">
-                    <span>Data Buah</span>
-                </a>
-                <a href="{{ route('admin.restok.index') }}" class="flex items-center gap-3 px-4 py-3 bg-brand-500 rounded-xl text-white no-underline font-semibold shadow-sm shadow-brand-500/20 transition-all duration-200">
-                    <span>Pembelian & Restok</span>
-                </a>
-                <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-200/70 rounded-xl text-slate-600 no-underline font-medium transition-all duration-200">
-                    <span>Manajemen Pengguna</span>
-                </a>
-            </div>
-        </div>
-        
-        <!-- USER PROFILE & LOGOUT -->
-        <div class="w-full pt-4 border-t border-slate-200 box-border">
-            <div class="flex items-center gap-3 px-2 mb-3">
-                <div class="flex w-10 h-10 shrink-0 items-center justify-center bg-brand-500 rounded-xl text-white font-bold shadow-sm">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'Ad', 0, 2)) }}
-                </div>
-                <div class="flex flex-col overflow-hidden">
-                    <div class="font-bold text-slate-900 text-sm leading-tight truncate">{{ auth()->user()->name ?? 'Admin' }}</div>
-                    <div class="font-medium text-slate-500 text-xs leading-none mt-1">{{ ucfirst(auth()->user()->role ?? 'Admin') }}</div>
-                </div>
-            </div>
-            <form method="POST" action="{{ route('logout') }}" class="m-0">
-                @csrf
-                <button type="submit" class="w-full text-left px-3 py-2.5 text-red-600 text-sm font-semibold rounded-xl hover:bg-red-50 border-0 bg-transparent cursor-pointer transition-colors duration-150">
-                    Keluar
-                </button>
-            </form>
-        </div>
-    </div>
+@extends('layouts.admin')
 
-    <!-- MAIN CONTENT CONTAINER -->
-    <div class="flex flex-col flex-1 h-full bg-slate-50 overflow-hidden">
-        
-        <!-- TOPBAR -->
-        <div class="flex h-16 items-center justify-between px-6 bg-white border-b border-slate-200 shrink-0 box-border">
-            <div>
-                <h1 class="m-0 font-bold text-slate-900 text-lg leading-tight">Kelola Pembelian & Restok</h1>
-                <p class="text-slate-500 text-xs mt-0.5 hidden sm:block">Tambah stok dari supplier dan pantau riwayat transaksi Anda.</p>
-            </div>
-            <span class="text-slate-500 text-xs font-semibold bg-slate-100 px-3 py-1.5 rounded-full">{{ now()->translatedFormat('l, d F Y') }}</span>
-        </div>
+@section('title', 'Kelola Pembelian & Restok')
+@section('page_title', 'Kelola Pembelian & Restok')
+@section('page_description', 'Tambah stok dari supplier dan pantau riwayat transaksi Anda.')
 
-        <!-- CONTENT BODY -->
-        <div class="flex-1 overflow-y-auto p-6 box-border">
-            @if(session('success'))
-                <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800 shadow-sm flex items-center gap-2">
-                    <span class="font-semibold">Berhasil:</span> {{ session('success') }}
-                </div>
-            @endif
-
-            <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] items-start">
+@section('content')
+<div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] items-start">
                 
                 <!-- FORM CARD -->
                 <div class="rounded-2xl bg-white border border-slate-200 p-6 shadow-sm">
@@ -182,7 +96,4 @@
                 
             </div>
         </div>
-    </div>
-</div>
-</body>
-</html>
+@endsection
