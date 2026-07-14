@@ -45,6 +45,12 @@
                 <a href="{{ route('admin.restok.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-200/70 rounded-xl text-slate-600 no-underline font-medium transition-all duration-200 {{ request()->routeIs('admin.restok.*') ? 'bg-brand-500 text-white font-semibold shadow-sm shadow-brand-500/20' : '' }}">
                     <span>Pembelian & Restok</span>
                 </a>
+                
+                <!-- MENU LAPORAN PENJUALAN -->
+                <a href="{{ route('admin.laporan.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-200/70 rounded-xl text-slate-600 no-underline font-medium transition-all duration-200 {{ request()->routeIs('admin.laporan.*') ? 'bg-brand-500 text-white font-semibold shadow-sm shadow-brand-500/20' : '' }}">
+                    <span>Laporan Penjualan</span>
+                </a>
+
                 <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-200/70 rounded-xl text-slate-600 no-underline font-medium transition-all duration-200 {{ request()->routeIs('admin.users.*') ? 'bg-brand-500 text-white font-semibold shadow-sm shadow-brand-500/20' : '' }}">
                     <span>Manajemen Pengguna</span>
                 </a>

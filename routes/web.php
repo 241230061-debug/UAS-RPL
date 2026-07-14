@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     // Khusus admin
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        
         Route::get('/buah', [BuahController::class, 'index'])->name('buah.index');
         Route::post('/buah', [BuahController::class, 'store'])->name('buah.store');
         Route::post('/buah/{buah}/rusak', [BuahController::class, 'reportRusak'])->name('buah.rusak');
@@ -50,6 +51,11 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/restok', [RestokController::class, 'index'])->name('restok.index');
         Route::post('/restok', [RestokController::class, 'store'])->name('restok.store');
+
+        // Rute Baru: Halaman Tampilan Laporan Penjualan Admin
+        Route::get('/laporan', function () {
+            return view('admin.laporan_penjualan.index');
+        })->name('laporan.index');
     });
 
     // Khusus kasir
