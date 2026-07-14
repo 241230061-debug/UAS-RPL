@@ -71,7 +71,7 @@
                                     <div class="text-right text-xs font-semibold text-slate-400 bg-white px-2.5 py-1 rounded-md border border-slate-200">{{ $item->created_at->format('d M Y') }}</div>
                                 </div>
                                 <div class="mt-4 flex items-center justify-between pt-3 border-t border-dashed border-slate-200">
-                                    <div class="text-xs text-slate-500">Jumlah: <span class="font-bold text-slate-800">{{ $item->jumlah }} pcs</span></div>
+                                    <div class="text-xs text-slate-500">Jumlah: <span class="font-bold text-slate-800">{{ $item->jumlah }} Kg</span></div>
                                     <div class="text-sm font-extrabold text-brand-600">Rp {{ number_format($item->total_biaya, 0, ',', '.') }}</div>
                                 </div>
                                 @if($item->catatan)

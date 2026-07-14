@@ -1,82 +1,26 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta charset="utf-8" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Terminal Kasir - Toko Buah Mas Ali</title>
-    <link rel="stylesheet" href="{{ asset('css/globals.css') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            corePlugins: { preflight: false },
-            theme: { extend: {} },
-            plugins: [],
-        }
-    </script>
-</head>
-<body class="m-0 p-0 bg-[#f9f9ff] font-sans antialiased">
-<div class="flex h-screen w-full items-start overflow-hidden relative">
+@extends('layouts.kasir')
 
-    {{-- SIDEBAR --}}
-    <div class="flex flex-col w-[260px] h-full items-start justify-between px-4 py-6 bg-[#f2f3fc] border-r border-[#c2c6d4] box-border shrink-0">
-        <div class="w-full flex flex-col items-start">
-            <div class="px-2 w-full box-border">
-                <p class="m-0 font-bold text-[#003f87] text-xl xl:text-2xl leading-8">
-                    Toko Buah Mas Ali <span class="text-sm font-medium text-[#424752] block opacity-70">Panel Kasir</span>
-                </p>
-            </div>
+@section('title', 'Terminal Kasir')
+@section('page_title', 'Terminal Kasir')
+@section('page_description', 'Proses transaksi penjualan buah')
 
-            <div class="mt-8 w-full flex flex-col gap-2">
-                <a href="{{ route('kasir.dashboard') }}" class="flex items-center gap-3 px-4 py-3 bg-[#0056b3] rounded-lg text-decoration-none transition-all duration-200 group">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-[#bbd0ff]">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                    </svg>
-                    <span class="text-[#bbd0ff] text-base font-medium">Transaksi</span>
-                </a>
-                <a href="{{ route('kasir.riwayat') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-[#434751]">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 9h3.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                    <span class="text-base font-medium">Riwayat Transaksi</span>
-                </a>
-            </div>
-        </div>
-
-        <div class="w-full pt-4 border-t border-[#c2c6d4] box-border">
-            <div class="flex items-center gap-3 px-2">
-                <div class="flex w-10 h-10 shrink-0 items-center justify-center bg-[#0056b3] rounded-xl text-[#bbd0ff] font-bold shadow-sm">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'Kasir', 0, 2)) }}
-                </div>
-                <div class="flex flex-col overflow-hidden">
-                    <div class="font-bold text-[#191c21] text-sm leading-5 truncate">{{ auth()->user()->name ?? 'Siti Aminah' }}</div>
-                    <div class="font-medium text-[#424752] text-xs leading-4 opacity-80">{{ ucfirst(auth()->user()->role ?? 'Cashier') }}</div>
-                </div>
-            </div>
-            <form method="POST" action="{{ route('logout') }}" class="mt-3">
-                @csrf
-                <button type="submit" class="w-full text-left px-2 py-2 text-[#ba1a1a] text-sm font-semibold rounded-lg hover:bg-[#fdecec] border-0 bg-transparent cursor-pointer">
-                    Keluar
-                </button>
-            </form>
-        </div>
-    </div>
-
+@section('content')
+<div class="flex h-full w-full items-start overflow-hidden">
     {{-- MAIN: DAFTAR PRODUK --}}
-    <div class="flex flex-col flex-1 h-full bg-[#f9f9ff] overflow-hidden">
+    <div class="flex flex-col flex-1 h-full bg-slate-50 overflow-hidden">
 
-        <div class="flex h-16 items-center justify-between px-6 bg-[#f9f9ff] border-b border-[#c2c6d4] shrink-0 box-border">
+        <div class="flex h-16 items-center justify-between px-6 bg-white border-b border-slate-200 shrink-0 box-border">
             <div class="relative w-full max-w-md flex items-center">
-                <input id="search-input" class="w-full bg-white rounded-lg border border-[#c2c6d4] py-2 pl-10 pr-4 text-gray-700 text-sm focus:outline-none focus:border-[#0056b3] shadow-sm box-border" placeholder="Cari produk..." type="text" />
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[18px] h-[18px] text-gray-400 absolute left-3 pointer-events-none">
+                <input id="search-input" class="w-full bg-white rounded-lg border border-slate-300 py-2 pl-10 pr-4 text-slate-700 text-sm focus:outline-none focus:border-brand-500 shadow-sm box-border" placeholder="Cari produk..." type="text" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[18px] h-[18px] text-slate-400 absolute left-3 pointer-events-none">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.602 10.602Z" />
                 </svg>
             </div>
 
             <div class="flex items-center gap-6 select-none">
                 <div class="flex flex-col items-end text-right">
-                    <span class="text-[#003f87] text-xs font-bold tracking-wider">KASIR: {{ strtoupper(auth()->user()->name ?? 'SITI AMINAH') }}</span>
-                    <span id="session-clock" class="text-[#424752] text-[10px] font-medium opacity-80 mt-0.5">{{ now()->format('H:i:s') }}</span>
+                    <span class="text-brand-600 text-xs font-bold tracking-wider">KASIR: {{ strtoupper(auth()->user()->name ?? 'KASIR') }}</span>
+                    <span id="session-clock" class="text-slate-600 text-[10px] font-medium opacity-80 mt-0.5">{{ now()->format('H:i:s') }}</span>
                 </div>
             </div>
         </div>
@@ -84,18 +28,18 @@
         <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 box-border">
 
             <div id="kategori-filter" class="w-full flex items-center gap-3 overflow-x-auto pb-2 border-b border-transparent">
-                <button type="button" data-kategori="all" class="kategori-btn px-5 py-2.5 bg-[#003f87] text-white font-bold text-sm rounded-xl border-0 shadow-sm cursor-pointer whitespace-nowrap">Semua</button>
+                <button type="button" data-kategori="all" class="kategori-btn px-5 py-2.5 bg-brand-600 text-white font-bold text-sm rounded-xl border-0 shadow-sm cursor-pointer whitespace-nowrap">Semua</button>
                 @foreach($kategori as $k)
-                    <button type="button" data-kategori="{{ $k }}" class="kategori-btn px-5 py-2.5 bg-[#e7e8f0] text-[#424752] font-bold text-sm rounded-xl border-0 hover:bg-[#dcdde6] transition-colors cursor-pointer whitespace-nowrap">{{ $k }}</button>
+                    <button type="button" data-kategori="{{ $k }}" class="kategori-btn px-5 py-2.5 bg-slate-200 text-slate-700 font-bold text-sm rounded-xl border-0 hover:bg-slate-300 transition-colors cursor-pointer whitespace-nowrap">{{ $k }}</button>
                 @endforeach
             </div>
 
             <div id="produk-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 @forelse($buah as $item)
-                    <div class="produk-card flex flex-col bg-white rounded-xl overflow-hidden border border-[#c2c6d4] shadow-sm hover:shadow-md transition-shadow duration-200 {{ $item->stokHabis() ? 'opacity-50' : '' }}"
+                    <div class="produk-card flex flex-col bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-200 {{ $item->stokHabis() ? 'opacity-50' : '' }}"
                          data-nama="{{ strtolower($item->nama_buah) }}"
                          data-kategori="{{ $item->kategori }}">
-                        <div class="w-full h-28 bg-[#ededf6] overflow-hidden relative flex items-center justify-center">
+                        <div class="w-full h-28 bg-slate-100 overflow-hidden relative flex items-center justify-center">
                             @if($item->gambar)
                                 <img class="w-full h-full object-cover" src="{{ asset('storage/'.$item->gambar) }}" alt="{{ $item->nama_buah }}" />
                             @else
@@ -104,15 +48,15 @@
                         </div>
                         <div class="p-3 flex flex-col justify-between flex-1 gap-2">
                             <div>
-                                <div class="font-bold text-[#191c21] text-base leading-snug">{{ $item->nama_buah }}</div>
-                                <div class="text-[#424752] text-sm font-semibold mt-0.5">Rp {{ number_format($item->harga, 0, ',', '.') }} / {{ $item->satuan }}</div>
+                                <div class="font-bold text-slate-900 text-base leading-snug">{{ $item->nama_buah }}</div>
+                                <div class="text-slate-700 text-sm font-semibold mt-0.5">Rp {{ number_format($item->harga, 0, ',', '.') }} / {{ $item->satuan }}</div>
                             </div>
-                            <div class="flex justify-between items-center pt-2 border-t border-[#f0f0f5]">
-                                <span class="{{ $item->stokMenipis() ? 'bg-[#ffe08a] text-[#7a5900]' : ($item->stokHabis() ? 'bg-[#ffb3b3] text-[#7a0000]' : 'bg-[#93f7ba] text-[#00663c]') }} text-[10px] font-bold px-1.5 py-0.5 rounded-sm">
+                            <div class="flex justify-between items-center pt-2 border-t border-slate-100">
+                                <span class="{{ $item->stokMenipis() ? 'bg-amber-100 text-amber-800' : ($item->stokHabis() ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800') }} text-[10px] font-bold px-1.5 py-0.5 rounded-sm">
                                     STOK: {{ $item->stok }}
                                 </span>
                                 <button type="button"
-                                        class="btn-tambah bg-[#0056b3] border-0 p-1.5 rounded-lg text-white hover:bg-[#004694] cursor-pointer flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                        class="btn-tambah bg-brand-600 border-0 p-1.5 rounded-lg text-white hover:bg-brand-700 cursor-pointer flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                                         data-id="{{ $item->id }}"
                                         data-nama="{{ $item->nama_buah }}"
                                         data-harga="{{ $item->harga }}"
@@ -125,19 +69,19 @@
                         </div>
                     </div>
                 @empty
-                    <p class="text-[#424752] col-span-full text-center py-10">Belum ada produk. Silakan tambahkan data buah terlebih dahulu.</p>
+                    <p class="text-slate-700 col-span-full text-center py-10">Belum ada produk. Silakan tambahkan data buah terlebih dahulu.</p>
                 @endforelse
             </div>
         </div>
     </div>
 
     {{-- KERANJANG --}}
-    <div class="flex flex-col w-[380px] h-full bg-[#f2f3fc] border-l border-[#c2c6d4] shrink-0 box-border justify-between">
+    <div class="flex flex-col w-[380px] h-full bg-slate-100 border-l border-slate-200 shrink-0 box-border justify-between">
 
-        <div class="flex flex-col gap-3 p-4 bg-[#f9f9ff] border-b border-[#c2c6d4] box-border">
+        <div class="flex flex-col gap-3 p-4 bg-white border-b border-slate-200 box-border">
             <div class="flex items-center justify-between">
-                <span class="font-semibold text-[#191c21] text-lg">Transaksi Saat Ini</span>
-                <button id="btn-clear" type="button" class="bg-transparent border-0 flex items-center gap-1 cursor-pointer text-[#ba1a1a] hover:opacity-80 transition-opacity">
+                <span class="font-semibold text-slate-900 text-lg">Transaksi Saat Ini</span>
+                <button id="btn-clear" type="button" class="bg-transparent border-0 flex items-center gap-1 cursor-pointer text-red-600 hover:opacity-80 transition-opacity">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
                     <span class="text-xs font-bold tracking-wider">KOSONGKAN</span>
                 </button>
@@ -145,20 +89,20 @@
         </div>
 
         <div id="cart-list" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 box-border">
-            <p id="cart-empty" class="text-center text-sm text-[#424752] opacity-60 mt-8">Keranjang masih kosong.<br>Klik tombol (+) pada produk untuk mulai.</p>
+            <p id="cart-empty" class="text-center text-sm text-slate-600 opacity-60 mt-8">Keranjang masih kosong.<br>Klik tombol (+) pada produk untuk mulai.</p>
         </div>
 
-        <div class="p-4 bg-[#f9f9ff] border-t border-[#c2c6d4] flex flex-col gap-3 shadow-[0px_-4px_12px_rgba(0,0,0,0.04)] box-border w-full">
+        <div class="p-4 bg-white border-t border-slate-200 flex flex-col gap-3 shadow-[0px_-4px_12px_rgba(0,0,0,0.04)] box-border w-full">
             <div class="flex items-center justify-between text-sm">
-                <span class="text-[#424752] font-medium">Total Item</span>
-                <span id="total-item" class="font-bold text-[#191c21]">0</span>
+                <span class="text-slate-700 font-medium">Total Item</span>
+                <span id="total-item" class="font-bold text-slate-900">0</span>
             </div>
             <div class="flex items-center justify-between text-lg">
-                <span class="text-[#424752] font-semibold">Total Bayar</span>
-                <span id="total-harga" class="font-bold text-[#003f87]">Rp 0</span>
+                <span class="text-slate-700 font-semibold">Total Bayar</span>
+                <span id="total-harga" class="font-bold text-brand-600">Rp 0</span>
             </div>
 
-            <button id="btn-bayar" type="button" disabled class="w-full bg-[#003f87] disabled:opacity-40 disabled:cursor-not-allowed border-0 text-white font-semibold text-lg py-4 rounded-xl flex items-center justify-center gap-3 shadow-md hover:bg-[#00316e] transition-all cursor-pointer box-border">
+            <button id="btn-bayar" type="button" disabled class="w-full bg-brand-600 disabled:opacity-40 disabled:cursor-not-allowed border-0 text-white font-semibold text-lg py-4 rounded-xl flex items-center justify-center gap-3 shadow-md hover:bg-brand-700 transition-all cursor-pointer box-border">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75m0 .75v.75m0 .75v.75m0 .75V15h16.5V8.25m-16.5 0h16.5M3.75 8.25v7.5m16.5-7.5V5.25c0-.754-.726-1.294-1.453-1.096A60.065 60.065 0 0 0 3.75 4.5Z" />
                 </svg>
@@ -171,36 +115,36 @@
 {{-- MODAL PEMBAYARAN --}}
 <div id="modal-bayar" class="hidden fixed inset-0 bg-black/40 z-40 items-center justify-center">
     <div class="bg-white rounded-2xl w-[420px] max-w-[90vw] p-6 shadow-xl">
-        <h3 class="text-xl font-bold text-[#191c21] mb-1">Pembayaran</h3>
-        <p class="text-sm text-[#424752] mb-4">Masukkan jumlah uang yang diterima dari pelanggan.</p>
+        <h3 class="text-xl font-bold text-slate-900 mb-1">Pembayaran</h3>
+        <p class="text-sm text-slate-700 mb-4">Masukkan jumlah uang yang diterima dari pelanggan.</p>
 
-        <div class="bg-[#f2f3fc] rounded-xl p-4 flex items-center justify-between mb-4">
-            <span class="text-sm font-semibold text-[#424752]">Total Belanja</span>
-            <span id="modal-total" class="text-xl font-bold text-[#003f87]">Rp 0</span>
+        <div class="bg-slate-100 rounded-xl p-4 flex items-center justify-between mb-4">
+            <span class="text-sm font-semibold text-slate-700">Total Belanja</span>
+            <span id="modal-total" class="text-xl font-bold text-brand-600">Rp 0</span>
         </div>
 
-        <label class="block text-sm font-semibold text-[#424752] mb-1">Metode Pembayaran</label>
-        <select id="metode-pembayaran" class="w-full mb-4 border border-[#c2c6d4] rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#0056b3]">
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Metode Pembayaran</label>
+        <select id="metode-pembayaran" class="w-full mb-4 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-600">
             <option value="tunai">Tunai</option>
             <option value="qris">QRIS</option>
             <option value="debit">Kartu Debit</option>
         </select>
 
-        <label class="block text-sm font-semibold text-[#424752] mb-1">Jumlah Bayar</label>
-        <input id="input-bayar" type="number" min="0" class="w-full border border-[#c2c6d4] rounded-lg px-3 py-2.5 text-lg font-semibold focus:outline-none focus:border-[#0056b3] mb-2" placeholder="0" />
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Jumlah Bayar</label>
+        <input id="input-bayar" type="number" min="0" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-lg font-semibold focus:outline-none focus:border-brand-600 mb-2" placeholder="0" />
 
         <div id="quick-cash" class="flex gap-2 mb-4"></div>
 
         <div class="flex items-center justify-between mb-4">
-            <span class="text-sm font-semibold text-[#424752]">Kembalian</span>
-            <span id="modal-kembalian" class="text-lg font-bold text-[#00663c]">Rp 0</span>
+            <span class="text-sm font-semibold text-slate-700">Kembalian</span>
+            <span id="modal-kembalian" class="text-lg font-bold text-emerald-700">Rp 0</span>
         </div>
 
-        <p id="modal-error" class="hidden text-sm text-[#ba1a1a] font-medium mb-3"></p>
+        <p id="modal-error" class="hidden text-sm text-red-600 font-medium mb-3"></p>
 
         <div class="flex gap-3">
-            <button id="btn-batal-bayar" type="button" class="flex-1 border border-[#c2c6d4] rounded-lg py-3 font-bold text-[#424752] hover:bg-gray-50">Batal</button>
-            <button id="btn-konfirmasi-bayar" type="button" class="flex-1 bg-[#003f87] text-white rounded-lg py-3 font-bold hover:bg-[#00316e] disabled:opacity-40 disabled:cursor-not-allowed">Konfirmasi</button>
+            <button id="btn-batal-bayar" type="button" class="flex-1 border border-slate-300 rounded-lg py-3 font-bold text-slate-700 hover:bg-slate-50">Batal</button>
+            <button id="btn-konfirmasi-bayar" type="button" class="flex-1 bg-brand-600 text-white rounded-lg py-3 font-bold hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed">Konfirmasi</button>
         </div>
     </div>
 </div>
@@ -208,23 +152,23 @@
 {{-- MODAL STRUK / RECEIPT --}}
 <div id="modal-struk" class="hidden fixed inset-0 bg-black/40 z-50 items-center justify-center">
     <div class="bg-white rounded-2xl w-[380px] max-w-[90vw] p-6 shadow-xl text-center">
-        <div class="w-14 h-14 rounded-full bg-[#e5f9ee] text-[#00663c] flex items-center justify-center mx-auto mb-3">
+        <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-3">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
         </div>
-        <h3 class="text-lg font-bold text-[#191c21] mb-1">Transaksi Berhasil</h3>
-        <p id="struk-kode" class="text-sm text-[#424752] mb-4">TRX-000</p>
+        <h3 class="text-lg font-bold text-slate-900 mb-1">Transaksi Berhasil</h3>
+        <p id="struk-kode" class="text-sm text-slate-600 mb-4">TRX-000</p>
 
-        <div id="struk-detail" class="text-left bg-[#f9f9ff] rounded-xl p-4 mb-4 max-h-[220px] overflow-y-auto text-sm"></div>
+        <div id="struk-detail" class="text-left bg-slate-50 rounded-xl p-4 mb-4 max-h-[220px] overflow-y-auto text-sm"></div>
 
         <div class="text-left text-sm mb-5 space-y-1">
-            <div class="flex justify-between"><span class="text-[#424752]">Total</span><span id="struk-total" class="font-bold">Rp 0</span></div>
-            <div class="flex justify-between"><span class="text-[#424752]">Bayar</span><span id="struk-bayar" class="font-semibold">Rp 0</span></div>
-            <div class="flex justify-between"><span class="text-[#424752]">Kembalian</span><span id="struk-kembalian" class="font-semibold text-[#00663c]">Rp 0</span></div>
+            <div class="flex justify-between"><span class="text-slate-700">Total</span><span id="struk-total" class="font-bold">Rp 0</span></div>
+            <div class="flex justify-between"><span class="text-slate-700">Bayar</span><span id="struk-bayar" class="font-semibold">Rp 0</span></div>
+            <div class="flex justify-between"><span class="text-slate-700">Kembalian</span><span id="struk-kembalian" class="font-semibold text-emerald-700">Rp 0</span></div>
         </div>
 
         <div class="flex gap-3">
-            <a href="{{ route('kasir.riwayat') }}" class="flex-1 border border-[#c2c6d4] rounded-lg py-3 font-bold text-[#424752] hover:bg-gray-50 text-decoration-none">Lihat Riwayat</a>
-            <button id="btn-transaksi-baru" type="button" class="flex-1 bg-[#003f87] text-white rounded-lg py-3 font-bold hover:bg-[#00316e]">Transaksi Baru</button>
+            <a href="{{ route('kasir.riwayat') }}" class="flex-1 border border-slate-300 rounded-lg py-3 font-bold text-slate-700 hover:bg-slate-50 text-decoration-none">Lihat Riwayat</a>
+            <button id="btn-transaksi-baru" type="button" class="flex-1 bg-brand-600 text-white rounded-lg py-3 font-bold hover:bg-brand-700">Transaksi Baru</button>
         </div>
     </div>
 </div>
@@ -265,19 +209,19 @@
             btnBayar.disabled = false;
             items.forEach(item => {
                 const row = document.createElement('div');
-                row.className = 'flex items-center gap-3 bg-white rounded-lg border border-[#c2c6d4] p-3';
+                row.className = 'flex items-center gap-3 bg-white rounded-lg border border-slate-200 p-3';
                 row.innerHTML = `
                     <div class="flex-1 min-w-0">
-                        <div class="font-bold text-[#191c21] text-sm truncate">${item.nama}</div>
-                        <div class="text-[#424752] text-xs">${formatRupiah(item.harga)} / ${item.satuan}</div>
+                        <div class="font-bold text-slate-900 text-sm truncate">${item.nama}</div>
+                        <div class="text-slate-600 text-xs">${formatRupiah(item.harga)} / ${item.satuan}</div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button type="button" class="btn-qty-min w-7 h-7 rounded-md bg-[#e7e8f0] font-bold text-[#424752] cursor-pointer" data-id="${item.id}">-</button>
+                        <button type="button" class="btn-qty-min w-7 h-7 rounded-md bg-slate-200 font-bold text-slate-700 cursor-pointer" data-id="${item.id}">-</button>
                         <span class="w-6 text-center font-bold text-sm">${item.qty}</span>
-                        <button type="button" class="btn-qty-plus w-7 h-7 rounded-md bg-[#e7e8f0] font-bold text-[#424752] cursor-pointer" data-id="${item.id}">+</button>
+                        <button type="button" class="btn-qty-plus w-7 h-7 rounded-md bg-slate-200 font-bold text-slate-700 cursor-pointer" data-id="${item.id}">+</button>
                     </div>
-                    <div class="w-20 text-right font-bold text-sm text-[#003f87]">${formatRupiah(item.harga * item.qty)}</div>
-                    <button type="button" class="btn-hapus text-[#ba1a1a] cursor-pointer" data-id="${item.id}">
+                    <div class="w-20 text-right font-bold text-sm text-brand-600">${formatRupiah(item.harga * item.qty)}</div>
+                    <button type="button" class="btn-hapus text-red-600 cursor-pointer" data-id="${item.id}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
                     </button>
                 `;
@@ -344,11 +288,11 @@
     document.querySelectorAll('.kategori-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.kategori-btn').forEach(b => {
-                b.classList.remove('bg-[#003f87]', 'text-white');
-                b.classList.add('bg-[#e7e8f0]', 'text-[#424752]');
+                b.classList.remove('bg-brand-600', 'text-white');
+                b.classList.add('bg-slate-200', 'text-slate-700');
             });
-            btn.classList.remove('bg-[#e7e8f0]', 'text-[#424752]');
-            btn.classList.add('bg-[#003f87]', 'text-white');
+            btn.classList.remove('bg-slate-200', 'text-slate-700');
+            btn.classList.add('bg-brand-600', 'text-white');
 
             const kategori = btn.dataset.kategori;
             document.querySelectorAll('.produk-card').forEach(card => {
@@ -388,7 +332,7 @@
 
         const opsi = [total, Math.ceil(total / 5000) * 5000 + 5000, Math.ceil(total / 10000) * 10000 + 10000];
         quickCashEl.innerHTML = [...new Set(opsi)].map(v =>
-            `<button type="button" class="btn-quick-cash flex-1 bg-[#e7e8f0] hover:bg-[#dcdde6] rounded-lg py-2 text-xs font-bold text-[#424752] cursor-pointer" data-value="${v}">${formatRupiah(v)}</button>`
+            `<button type="button" class="btn-quick-cash flex-1 bg-slate-200 hover:bg-slate-300 rounded-lg py-2 text-xs font-bold text-slate-700 cursor-pointer" data-value="${v}">${formatRupiah(v)}</button>`
         ).join('');
 
         modalBayar.classList.remove('hidden');
@@ -413,7 +357,7 @@
         const bayar = parseInt(inputBayar.value || 0, 10);
         const kembalian = bayar - total;
         modalKembalian.textContent = formatRupiah(Math.max(kembalian, 0));
-        modalKembalian.className = kembalian < 0 ? 'text-lg font-bold text-[#ba1a1a]' : 'text-lg font-bold text-[#00663c]';
+        modalKembalian.className = kembalian < 0 ? 'text-lg font-bold text-red-600' : 'text-lg font-bold text-emerald-700';
     });
 
     document.getElementById('btn-bayar').addEventListener('click', bukaModalBayar);
@@ -481,7 +425,7 @@
 
         document.getElementById('struk-detail').innerHTML = trx.items.map(i => `
             <div class="flex justify-between py-1">
-                <span class="text-[#424752]">${i.nama_buah} x${i.qty}</span>
+                <span class="text-slate-700">${i.nama_buah} x${i.qty}</span>
                 <span class="font-semibold">${formatRupiah(i.subtotal)}</span>
             </div>
         `).join('');
@@ -500,5 +444,4 @@
     renderCart();
 })();
 </script>
-</body>
-</html>
+@endsection

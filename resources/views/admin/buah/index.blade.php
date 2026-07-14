@@ -133,7 +133,7 @@
                                 <div class="space-y-3">
                                     <form action="{{ route('admin.buah.rusak', $item) }}" method="POST" class="flex items-center gap-2">
                                         @csrf
-                                        <input type="number" name="jumlah_rusak" min="1" max="{{ $item->stok }}" value="{{ old('jumlah_rusak') }}" class="w-full rounded-md border border-slate-200 px-3 py-1.5 text-xs outline-none focus:border-rose-500 transition-colors" placeholder="Jumlah afkir/rusak" required>
+                                        <input type="number" name="jumlah_rusak" min="1" max="{{ $item->stok }}" value="{{ old('jumlah_rusak') }}" class="w-full rounded-md border border-slate-200 px-3 py-1.5 text-xs outline-none focus:border-rose-500 transition-colors" placeholder="Jumlah busuk/rusak" required>
                                         <button type="submit" class="shrink-0 rounded-md bg-rose-50 border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition-colors whitespace-nowrap">
                                             Laporkan Rusak
                                         </button>
