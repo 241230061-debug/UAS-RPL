@@ -28,7 +28,6 @@
 <body class="m-0 p-0 bg-slate-50 font-sans antialiased text-slate-800">
 <div class="flex h-screen w-full items-start overflow-hidden relative">
     
-    <!-- SIDEBAR -->
     <div class="flex flex-col w-[260px] h-full items-start justify-between px-4 py-6 bg-slate-100 border-r border-slate-200 box-border shrink-0 hidden md:flex">
         <div class="w-full flex flex-col items-start">
             <div class="px-2 w-full box-border">
@@ -53,7 +52,6 @@
             </div>
         </div>
         
-        <!-- USER PROFILE & LOGOUT -->
         <div class="w-full pt-4 border-t border-slate-200 box-border">
             <div class="flex items-center gap-3 px-2 mb-3">
                 <div class="flex w-10 h-10 shrink-0 items-center justify-center bg-brand-500 rounded-xl text-white font-bold shadow-sm">
@@ -73,19 +71,18 @@
         </div>
     </div>
 
-    <!-- MAIN CONTENT CONTAINER -->
     <div class="flex flex-col flex-1 h-full bg-slate-50 overflow-hidden">
         
-        <!-- TOPBAR -->
         <div class="flex h-16 items-center justify-between px-6 bg-white border-b border-slate-200 shrink-0 box-border">
             <div>
                 <h1 class="m-0 font-bold text-slate-900 text-lg leading-tight">@yield('page_title', 'Kasir')</h1>
                 <p class="text-slate-500 text-xs mt-0.5 hidden sm:block">@yield('page_description', 'Kelola transaksi penjualan')</p>
             </div>
-            <span class="text-slate-500 text-xs font-semibold bg-slate-100 px-3 py-1.5 rounded-full">{{ now()->translatedFormat('l, d F Y') }}</span>
+            <span class="text-slate-500 text-xs font-semibold bg-slate-100 px-3 py-1.5 rounded-full">
+                {{ now()->locale('id')->translatedFormat('l, d F Y') }}
+            </span>
         </div>
 
-        <!-- CONTENT BODY -->
         <div class="flex-1 overflow-y-auto box-border">
             @yield('content')
         </div>
