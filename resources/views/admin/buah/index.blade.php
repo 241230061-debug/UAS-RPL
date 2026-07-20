@@ -76,8 +76,7 @@
 
                         <div class="flex items-center justify-between pt-2 border-t border-slate-100">
                             <label class="inline-flex items-center gap-2 text-sm font-medium text-slate-700 cursor-pointer select-none">
-                                <input type="checkbox" name="aktif" value="1" {{ old('aktif', true) ? 'checked' : '' }} class="rounded border-slate-300 text-brand-600 focus:ring-brand-500 w-4 h-4">
-                                Tampilkan di Toko
+                               
                             </label>
                             <button type="submit" class="rounded-lg bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-700 active:bg-brand-700 transition-colors shadow-sm">Simpan Produk</button>
                         </div>

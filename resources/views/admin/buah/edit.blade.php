@@ -127,10 +127,6 @@
                         @error('keterangan')<p class="mt-1 text-xs text-[#ba1a1a]">{{ $message }}</p>@enderror
                     </div>
                     <div class="flex flex-wrap items-center gap-4">
-                        <label class="inline-flex items-center gap-2 text-sm font-semibold text-[#424752]">
-                            <input type="checkbox" name="aktif" value="1" {{ old('aktif', $buah->aktif) ? 'checked' : '' }}>
-                            Aktif
-                        </label>
                         <button type="submit" class="rounded-xl bg-[#003f87] px-5 py-3 text-sm font-semibold text-white hover:bg-[#00316e]">Perbarui Buah</button>
                     </div>
                 </form>
