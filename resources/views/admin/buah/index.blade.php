@@ -21,7 +21,7 @@
                 <!-- LEFT: FORM TAMBAH BUAH -->
                 <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
                     <div class="mb-6">
-                        <h2 class="text-base font-bold text-slate-900 m-0">Tambah Produk Baru</h2>
+                        <h2 class="text-base font-bold text-slate-900 m-0">Tambah Buah Baru</h2>
                         <p class="text-xs text-slate-500 mt-1">Kelola data inventaris komoditas buah di sini.</p>
                     </div>
 
@@ -29,7 +29,7 @@
                         @csrf
                         <div class="grid gap-4 md:grid-cols-2">
                             <div>
-                                <label class="block mb-1.5 text-xs font-semibold text-slate-700 uppercase tracking-wider">Kode Produk</label>
+                                <label class="block mb-1.5 text-xs font-semibold text-slate-700 uppercase tracking-wider">Kode Buah</label>
                                 <input type="text" name="kode" value="{{ old('kode') }}" class="w-full rounded-lg border border-slate-300 bg-slate-50 focus:bg-white focus:border-brand-500 focus:ring-1 focus:ring-brand-500 px-3 py-2 text-sm transition-all outline-none" placeholder="Contoh: AP-01" required>
                                 @error('kode')<p class="mt-1 text-xs text-rose-600">{{ $message }}</p>@enderror
                             </div>
@@ -131,13 +131,7 @@
 
                                 <!-- Aksi & Pelaporan Kerusakan -->
                                 <div class="space-y-3">
-                                    <form action="{{ route('admin.buah.rusak', $item) }}" method="POST" class="flex items-center gap-2">
-                                        @csrf
-                                        <input type="number" name="jumlah_rusak" min="1" max="{{ $item->stok }}" value="{{ old('jumlah_rusak') }}" class="w-full rounded-md border border-slate-200 px-3 py-1.5 text-xs outline-none focus:border-rose-500 transition-colors" placeholder="Jumlah afkir/rusak" required>
-                                        <button type="submit" class="shrink-0 rounded-md bg-rose-50 border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition-colors whitespace-nowrap">
-                                            Laporkan Rusak
-                                        </button>
-                                    </form>
+                                    
                                     
                                     @if($errors->has('jumlah_rusak'))
                                         <p class="text-[11px] text-rose-600 m-0">{{ $errors->first('jumlah_rusak') }}</p>

@@ -1,240 +1,261 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta charset="utf-8" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Terminal Kasir - Toko Buah Mas Ali</title>
-    <link rel="stylesheet" href="{{ asset('css/globals.css') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            corePlugins: { preflight: false },
-            theme: { extend: {} },
-            plugins: [],
-        }
-    </script>
-</head>
-<body class="m-0 p-0 bg-[#f9f9ff] font-sans antialiased">
-<div class="flex h-screen w-full items-start overflow-hidden relative">
+@extends('layouts.kasir')
 
-    {{-- SIDEBAR --}}
-    <div class="flex flex-col w-[260px] h-full items-start justify-between px-4 py-6 bg-[#f2f3fc] border-r border-[#c2c6d4] box-border shrink-0">
-        <div class="w-full flex flex-col items-start">
-            <div class="px-2 w-full box-border">
-                <p class="m-0 font-bold text-[#003f87] text-xl xl:text-2xl leading-8">
-                    Toko Buah Mas Ali <span class="text-sm font-medium text-[#424752] block opacity-70">Panel Kasir</span>
-                </p>
-            </div>
+@section('title', 'Terminal Kasir')
+@section('page_title', 'Terminal Kasir')
+@section('page_description', 'Proses transaksi penjualan buah')
 
-            <div class="mt-8 w-full flex flex-col gap-2">
-                <a href="{{ route('kasir.dashboard') }}" class="flex items-center gap-3 px-4 py-3 bg-[#0056b3] rounded-lg text-decoration-none transition-all duration-200 group">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-[#bbd0ff]">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                    </svg>
-                    <span class="text-[#bbd0ff] text-base font-medium">Transaksi</span>
-                </a>
-                <a href="{{ route('kasir.riwayat') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-[#e4e6f2] rounded-lg text-decoration-none text-[#434751] transition-all duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-[#434751]">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 9h3.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                    <span class="text-base font-medium">Riwayat Transaksi</span>
-                </a>
-            </div>
-        </div>
-
-        <div class="w-full pt-4 border-t border-[#c2c6d4] box-border">
-            <div class="flex items-center gap-3 px-2">
-                <div class="flex w-10 h-10 shrink-0 items-center justify-center bg-[#0056b3] rounded-xl text-[#bbd0ff] font-bold shadow-sm">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'Kasir', 0, 2)) }}
-                </div>
-                <div class="flex flex-col overflow-hidden">
-                    <div class="font-bold text-[#191c21] text-sm leading-5 truncate">{{ auth()->user()->name ?? 'Siti Aminah' }}</div>
-                    <div class="font-medium text-[#424752] text-xs leading-4 opacity-80">{{ ucfirst(auth()->user()->role ?? 'Cashier') }}</div>
-                </div>
-            </div>
-            <form method="POST" action="{{ route('logout') }}" class="mt-3">
-                @csrf
-                <button type="submit" class="w-full text-left px-2 py-2 text-[#ba1a1a] text-sm font-semibold rounded-lg hover:bg-[#fdecec] border-0 bg-transparent cursor-pointer">
-                    Keluar
-                </button>
-            </form>
-        </div>
-    </div>
-
+@section('content')
+<div class="flex h-full w-full items-start overflow-hidden font-sans bg-slate-50/50">
     {{-- MAIN: DAFTAR PRODUK --}}
-    <div class="flex flex-col flex-1 h-full bg-[#f9f9ff] overflow-hidden">
+    <div class="flex flex-col flex-1 h-full overflow-hidden">
 
-        <div class="flex h-16 items-center justify-between px-6 bg-[#f9f9ff] border-b border-[#c2c6d4] shrink-0 box-border">
-            <div class="relative w-full max-w-md flex items-center">
-                <input id="search-input" class="w-full bg-white rounded-lg border border-[#c2c6d4] py-2 pl-10 pr-4 text-gray-700 text-sm focus:outline-none focus:border-[#0056b3] shadow-sm box-border" placeholder="Cari produk..." type="text" />
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-[18px] h-[18px] text-gray-400 absolute left-3 pointer-events-none">
+        {{-- HEADER KASIR --}}
+        <div class="flex h-20 items-center justify-between px-8 bg-white border-b border-slate-200/60 shrink-0 box-border z-10 shadow-sm gap-6">
+            {{-- SEARCH BAR --}}
+            <div class="relative flex-1 max-w-md flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-slate-400 absolute left-4 pointer-events-none">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.602 10.602Z" />
                 </svg>
+                <input id="search-input" class="w-full bg-slate-50 rounded-xl border border-slate-200/80 py-2.5 pl-11 pr-5 text-slate-700 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 focus:bg-white transition-all box-border" placeholder="Cari..." type="text" />
             </div>
 
-            <div class="flex items-center gap-6 select-none">
+            {{-- LIVE CLOCK --}}
+            <div class="hidden lg:flex items-center gap-3 bg-slate-50 border border-slate-200/60 rounded-full px-4 py-2 shadow-inner select-none">
+                <span class="flex h-2 w-2 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span id="session-clock" class="text-xs font-semibold text-slate-600 tracking-wide">
+                    @php
+                        \Carbon\Carbon::setLocale('id');
+                        $now = now()->timezone('Asia/Jakarta');
+                    @endphp
+                    {{ $now->translatedFormat('l, d F Y') }} • <span class="text-brand-600 font-bold">{{ $now->format('H:i:s') }}</span> WIB
+                </span>
+            </div>
+
+            {{-- USER PROFILE --}}
+            <div class="flex items-center gap-3.5 select-none">
+                @php
+                    $hour = $now->hour;
+                    if ($hour < 11) { $greeting = 'Pagi'; }
+                    elseif ($hour < 15) { $greeting = 'Siang'; }
+                    elseif ($hour < 18) { $greeting = 'Sore'; }
+                    else { $greeting = 'Malam'; }
+                    
+                    $username = auth()->user()->name ?? 'Kasir';
+                @endphp
+
                 <div class="flex flex-col items-end text-right">
-                    <span class="text-[#003f87] text-xs font-bold tracking-wider">KASIR: {{ strtoupper(auth()->user()->name ?? 'SITI AMINAH') }}</span>
-                    <span id="session-clock" class="text-[#424752] text-[10px] font-medium opacity-80 mt-0.5">{{ now()->format('H:i:s') }}</span>
+                    <span class="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                        Selamat {{ $greeting }} 👋
+                    </span>
+                    <span class="text-sm font-extrabold text-slate-800 leading-tight">
+                        {{ strtoupper($username) }}
+                    </span>
+                </div>
+
+                {{-- Avatar Diganti Menjadi Ikon 👤 Minimalis & Modern --}}
+                <div class="h-10 w-10 rounded-xl bg-slate-100 border border-slate-200/70 flex items-center justify-center text-xl shadow-inner overflow-hidden">
+                    <span>👤</span>
                 </div>
             </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 box-border">
-
-            <div id="kategori-filter" class="w-full flex items-center gap-3 overflow-x-auto pb-2 border-b border-transparent">
-                <button type="button" data-kategori="all" class="kategori-btn px-5 py-2.5 bg-[#003f87] text-white font-bold text-sm rounded-xl border-0 shadow-sm cursor-pointer whitespace-nowrap">Semua</button>
+        <div class="flex-1 overflow-y-auto p-8 flex flex-col gap-6 box-border custom-scrollbar">
+            {{-- FILTER KATEGORI --}}
+            <div id="kategori-filter" class="w-full flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
+                <button type="button" data-kategori="all" class="kategori-btn px-5 py-2 bg-brand-600 text-white font-bold text-xs rounded-xl shadow-md shadow-brand-600/10 hover:shadow-lg transition-all active:scale-95 cursor-pointer whitespace-nowrap">Semua</button>
                 @foreach($kategori as $k)
-                    <button type="button" data-kategori="{{ $k }}" class="kategori-btn px-5 py-2.5 bg-[#e7e8f0] text-[#424752] font-bold text-sm rounded-xl border-0 hover:bg-[#dcdde6] transition-colors cursor-pointer whitespace-nowrap">{{ $k }}</button>
+                    <button type="button" data-kategori="{{ $k }}" class="kategori-btn px-5 py-2 bg-white text-slate-600 font-semibold text-xs rounded-xl border border-slate-200/60 hover:border-slate-300 hover:bg-slate-50 transition-all active:scale-95 cursor-pointer whitespace-nowrap">{{ $k }}</button>
                 @endforeach
             </div>
 
-            <div id="produk-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {{-- GRID PRODUK --}}
+            <div id="produk-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
                 @forelse($buah as $item)
-                    <div class="produk-card flex flex-col bg-white rounded-xl overflow-hidden border border-[#c2c6d4] shadow-sm hover:shadow-md transition-shadow duration-200 {{ $item->stokHabis() ? 'opacity-50' : '' }}"
+                    <div class="produk-card group flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-200/60 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 {{ $item->stokHabis() ? 'opacity-60 grayscale-[40%]' : '' }}"
                          data-nama="{{ strtolower($item->nama_buah) }}"
                          data-kategori="{{ $item->kategori }}">
-                        <div class="w-full h-28 bg-[#ededf6] overflow-hidden relative flex items-center justify-center">
+                        <div class="w-full h-36 bg-slate-50 overflow-hidden relative flex items-center justify-center p-4">
                             @if($item->gambar)
-                                <img class="w-full h-full object-cover" src="{{ asset('storage/'.$item->gambar) }}" alt="{{ $item->nama_buah }}" />
+                                <img class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" src="{{ asset('storage/'.$item->gambar) }}" alt="{{ $item->nama_buah }}" />
                             @else
-                                <span class="text-4xl">🍎</span>
+                                <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center text-4xl shadow-inner group-hover:scale-105 transition-transform duration-300">🍎</div>
                             @endif
-                        </div>
-                        <div class="p-3 flex flex-col justify-between flex-1 gap-2">
-                            <div>
-                                <div class="font-bold text-[#191c21] text-base leading-snug">{{ $item->nama_buah }}</div>
-                                <div class="text-[#424752] text-sm font-semibold mt-0.5">Rp {{ number_format($item->harga, 0, ',', '.') }} / {{ $item->satuan }}</div>
-                            </div>
-                            <div class="flex justify-between items-center pt-2 border-t border-[#f0f0f5]">
-                                <span class="{{ $item->stokMenipis() ? 'bg-[#ffe08a] text-[#7a5900]' : ($item->stokHabis() ? 'bg-[#ffb3b3] text-[#7a0000]' : 'bg-[#93f7ba] text-[#00663c]') }} text-[10px] font-bold px-1.5 py-0.5 rounded-sm">
-                                    STOK: {{ $item->stok }}
+                            <div class="absolute top-3 left-3">
+                                <span class="{{ $item->stokMenipis() ? 'bg-amber-50 text-amber-700 border border-amber-200' : ($item->stokHabis() ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-white text-slate-700 border border-slate-100') }} backdrop-blur-sm text-[10px] font-bold px-2.5 py-0.5 rounded-lg shadow-sm">
+                                    Stok: {{ $item->stok }}
                                 </span>
-                                <button type="button"
-                                        class="btn-tambah bg-[#0056b3] border-0 p-1.5 rounded-lg text-white hover:bg-[#004694] cursor-pointer flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                                        data-id="{{ $item->id }}"
-                                        data-nama="{{ $item->nama_buah }}"
-                                        data-harga="{{ $item->harga }}"
-                                        data-stok="{{ $item->stok }}"
-                                        data-satuan="{{ $item->satuan }}"
-                                        {{ $item->stokHabis() ? 'disabled' : '' }}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                                </button>
                             </div>
+                        </div>
+                        <div class="p-4 flex flex-col justify-between flex-1 gap-3">
+                            <div>
+                                <div class="font-bold text-slate-800 text-sm leading-snug tracking-tight group-hover:text-brand-600 transition-colors">{{ $item->nama_buah }}</div>
+                                <div class="text-brand-600 text-base font-extrabold mt-1">Rp {{ number_format($item->harga, 0, ',', '.') }} <span class="text-slate-400 text-xs font-medium">/ {{ $item->satuan }}</span></div>
+                            </div>
+                            <button type="button"
+                                    class="btn-tambah w-full bg-slate-50 hover:bg-brand-600 border border-slate-200/60 p-2.5 rounded-xl text-slate-700 hover:text-white cursor-pointer flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed group/btn shadow-sm"
+                                    data-id="{{ $item->id }}"
+                                    data-nama="{{ $item->nama_buah }}"
+                                    data-harga="{{ $item->harga }}"
+                                    data-stok="{{ $item->stok }}"
+                                    data-satuan="{{ $item->satuan }}"
+                                    {{ $item->stokHabis() ? 'disabled' : '' }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                                <span class="text-xs font-bold">Tambah</span>
+                            </button>
                         </div>
                     </div>
                 @empty
-                    <p class="text-[#424752] col-span-full text-center py-10">Belum ada produk. Silakan tambahkan data buah terlebih dahulu.</p>
+                    <div class="col-span-full flex flex-col items-center justify-center py-20 bg-white rounded-2xl border-2 border-dashed border-slate-200">
+                        <span class="text-5xl mb-4">🛒</span>
+                        <p class="text-slate-500 font-semibold text-sm">Belum ada produk terdaftar</p>
+                        <p class="text-slate-400 text-xs mt-1">Silakan tambahkan data buah terlebih dahulu.</p>
+                    </div>
                 @endforelse
             </div>
         </div>
     </div>
 
     {{-- KERANJANG --}}
-    <div class="flex flex-col w-[380px] h-full bg-[#f2f3fc] border-l border-[#c2c6d4] shrink-0 box-border justify-between">
+    <div class="flex flex-col w-[400px] h-full bg-white border-l border-slate-200 shrink-0 box-border justify-between shadow-[-8px_0_24px_rgba(0,0,0,0.02)] z-20">
+        <div class="flex items-center justify-between p-6 bg-white border-b border-slate-100 box-border">
+            <div>
+                <h2 class="font-bold text-slate-800 text-lg tracking-tight">Pesanan Baru</h2>
+                <p class="text-slate-400 text-xs font-medium mt-0.5">Kelola item transaksi di sini</p>
+            </div>
+            <button id="btn-clear" type="button" class="bg-red-50 p-2.5 rounded-xl border-0 flex items-center justify-center cursor-pointer text-red-500 hover:bg-red-100 hover:text-red-600 transition-colors active:scale-95 shadow-sm" title="Kosongkan Keranjang">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+            </button>
+        </div>
 
-        <div class="flex flex-col gap-3 p-4 bg-[#f9f9ff] border-b border-[#c2c6d4] box-border">
-            <div class="flex items-center justify-between">
-                <span class="font-semibold text-[#191c21] text-lg">Transaksi Saat Ini</span>
-                <button id="btn-clear" type="button" class="bg-transparent border-0 flex items-center gap-1 cursor-pointer text-[#ba1a1a] hover:opacity-80 transition-opacity">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
-                    <span class="text-xs font-bold tracking-wider">KOSONGKAN</span>
-                </button>
+        <div id="cart-list" class="flex-1 overflow-y-auto p-6 flex flex-col gap-3.5 box-border bg-slate-50/50">
+            <div id="cart-empty" class="h-full flex flex-col items-center justify-center text-center opacity-70 py-12">
+                <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 mb-4 shadow-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" /></svg>
+                </div>
+                <p class="text-xs text-slate-500 font-semibold leading-relaxed">Keranjang Masih Kosong<br><span class="text-slate-400 font-medium">Klik tombol tambah pada produk</span></p>
             </div>
         </div>
 
-        <div id="cart-list" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 box-border">
-            <p id="cart-empty" class="text-center text-sm text-[#424752] opacity-60 mt-8">Keranjang masih kosong.<br>Klik tombol (+) pada produk untuk mulai.</p>
-        </div>
-
-        <div class="p-4 bg-[#f9f9ff] border-t border-[#c2c6d4] flex flex-col gap-3 shadow-[0px_-4px_12px_rgba(0,0,0,0.04)] box-border w-full">
-            <div class="flex items-center justify-between text-sm">
-                <span class="text-[#424752] font-medium">Total Item</span>
-                <span id="total-item" class="font-bold text-[#191c21]">0</span>
+        <div class="p-6 bg-white border-t border-slate-100 flex flex-col gap-4 shadow-[0px_-12px_30px_rgba(0,0,0,0.03)] box-border w-full z-10">
+            <div class="flex items-center justify-between text-xs px-1">
+                <span class="text-slate-500 font-semibold">Total Item</span>
+                <span id="total-item" class="font-bold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-lg">0</span>
             </div>
-            <div class="flex items-center justify-between text-lg">
-                <span class="text-[#424752] font-semibold">Total Bayar</span>
-                <span id="total-harga" class="font-bold text-[#003f87]">Rp 0</span>
+            <div class="flex items-center justify-between mb-1 px-1">
+                <span class="text-slate-800 font-bold text-base">Total Bayar</span>
+                <span id="total-harga" class="font-black text-brand-600 text-xl tracking-tight">Rp 0</span>
             </div>
 
-            <button id="btn-bayar" type="button" disabled class="w-full bg-[#003f87] disabled:opacity-40 disabled:cursor-not-allowed border-0 text-white font-semibold text-lg py-4 rounded-xl flex items-center justify-center gap-3 shadow-md hover:bg-[#00316e] transition-all cursor-pointer box-border">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75m0 .75v.75m0 .75v.75m0 .75V15h16.5V8.25m-16.5 0h16.5M3.75 8.25v7.5m16.5-7.5V5.25c0-.754-.726-1.294-1.453-1.096A60.065 60.065 0 0 0 3.75 4.5Z" />
+            <button id="btn-bayar" type="button" disabled class="w-full bg-brand-600 disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none border-0 text-white font-bold text-base py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-600/20 hover:bg-brand-700 hover:-translate-y-0.5 transition-all active:scale-95 cursor-pointer box-border group">
+                <span>Proses Pembayaran</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 group-hover:translate-x-1 transition-transform">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                 </svg>
-                <span>Bayar</span>
             </button>
         </div>
     </div>
 </div>
 
 {{-- MODAL PEMBAYARAN --}}
-<div id="modal-bayar" class="hidden fixed inset-0 bg-black/40 z-40 items-center justify-center">
-    <div class="bg-white rounded-2xl w-[420px] max-w-[90vw] p-6 shadow-xl">
-        <h3 class="text-xl font-bold text-[#191c21] mb-1">Pembayaran</h3>
-        <p class="text-sm text-[#424752] mb-4">Masukkan jumlah uang yang diterima dari pelanggan.</p>
-
-        <div class="bg-[#f2f3fc] rounded-xl p-4 flex items-center justify-between mb-4">
-            <span class="text-sm font-semibold text-[#424752]">Total Belanja</span>
-            <span id="modal-total" class="text-xl font-bold text-[#003f87]">Rp 0</span>
+<div id="modal-bayar" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 items-center justify-center transition-opacity">
+    <div class="bg-white rounded-2xl w-[460px] max-w-[90vw] p-8 shadow-2xl transform transition-transform scale-100 border border-slate-100">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h3 class="text-xl font-bold text-slate-800 tracking-tight">Pembayaran</h3>
+                <p class="text-xs text-slate-400 mt-0.5">Selesaikan transaksi belanja pelanggan.</p>
+            </div>
+            <button class="btn-batal-bayar text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 p-2 rounded-xl transition-colors active:scale-95">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+            </button>
         </div>
 
-        <label class="block text-sm font-semibold text-[#424752] mb-1">Metode Pembayaran</label>
-        <select id="metode-pembayaran" class="w-full mb-4 border border-[#c2c6d4] rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#0056b3]">
-            <option value="tunai">Tunai</option>
-            <option value="qris">QRIS</option>
-            <option value="debit">Kartu Debit</option>
-        </select>
-
-        <label class="block text-sm font-semibold text-[#424752] mb-1">Jumlah Bayar</label>
-        <input id="input-bayar" type="number" min="0" class="w-full border border-[#c2c6d4] rounded-lg px-3 py-2.5 text-lg font-semibold focus:outline-none focus:border-[#0056b3] mb-2" placeholder="0" />
-
-        <div id="quick-cash" class="flex gap-2 mb-4"></div>
-
-        <div class="flex items-center justify-between mb-4">
-            <span class="text-sm font-semibold text-[#424752]">Kembalian</span>
-            <span id="modal-kembalian" class="text-lg font-bold text-[#00663c]">Rp 0</span>
+        <div class="bg-brand-50/60 border border-brand-100 rounded-xl p-4 flex items-center justify-between mb-5">
+            <span class="text-brand-800 text-sm font-bold">Total Tagihan</span>
+            <span id="modal-total" class="text-xl font-black text-brand-700 tracking-tight">Rp 0</span>
         </div>
 
-        <p id="modal-error" class="hidden text-sm text-[#ba1a1a] font-medium mb-3"></p>
+        <div class="space-y-4 mb-6">
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Metode Pembayaran</label>
+                <div class="grid grid-cols-3 gap-2.5" id="payment-methods-grid">
+                    <button type="button" data-value="tunai" class="metode-btn flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 border-brand-600 bg-brand-50/50 text-brand-700 font-bold transition-all shadow-sm">
+                        <span class="text-lg">💵</span><span class="text-xs">Tunai</span>
+                    </button>
+                    <button type="button" data-value="qris" class="metode-btn flex flex-col items-center gap-1.5 p-3 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 font-semibold transition-all">
+                        <span class="text-lg">📱</span><span class="text-xs">QRIS</span>
+                    </button>
+                    <button type="button" data-value="debit" class="metode-btn flex flex-col items-center gap-1.5 p-3 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 font-semibold transition-all">
+                        <span class="text-lg">💳</span><span class="text-xs">Debit</span>
+                    </button>
+                </div>
+                <input type="hidden" id="metode-pembayaran" value="tunai">
+            </div>
 
-        <div class="flex gap-3">
-            <button id="btn-batal-bayar" type="button" class="flex-1 border border-[#c2c6d4] rounded-lg py-3 font-bold text-[#424752] hover:bg-gray-50">Batal</button>
-            <button id="btn-konfirmasi-bayar" type="button" class="flex-1 bg-[#003f87] text-white rounded-lg py-3 font-bold hover:bg-[#00316e] disabled:opacity-40 disabled:cursor-not-allowed">Konfirmasi</button>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Jumlah Uang Diterima</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 font-extrabold text-slate-400 text-sm">Rp</span>
+                    <input id="input-bayar" type="number" min="0" class="w-full border border-slate-200 bg-slate-50 rounded-xl pl-12 pr-4 py-3.5 text-lg font-black text-slate-800 focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 focus:bg-white transition-all shadow-inner" placeholder="0" />
+                </div>
+            </div>
+            
+            <div id="quick-cash" class="flex gap-2"></div>
         </div>
+
+        <div class="flex items-center justify-between mb-6 pt-4 border-t border-slate-100">
+            <span class="text-sm font-semibold text-slate-500">Kembalian</span>
+            <span id="modal-kembalian" class="text-lg font-bold text-slate-400">Rp 0</span>
+        </div>
+
+        <p id="modal-error" class="hidden text-xs bg-red-50 text-red-600 border border-red-100 rounded-xl p-3 font-semibold mb-4 text-center shadow-sm"></p>
+
+        <button id="btn-konfirmasi-bayar" type="button" class="w-full bg-brand-600 text-white rounded-xl py-4 font-bold text-base hover:bg-brand-700 shadow-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">Konfirmasi Transaksi</button>
     </div>
 </div>
 
 {{-- MODAL STRUK / RECEIPT --}}
-<div id="modal-struk" class="hidden fixed inset-0 bg-black/40 z-50 items-center justify-center">
-    <div class="bg-white rounded-2xl w-[380px] max-w-[90vw] p-6 shadow-xl text-center">
-        <div class="w-14 h-14 rounded-full bg-[#e5f9ee] text-[#00663c] flex items-center justify-center mx-auto mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+<div id="modal-struk" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 items-center justify-center transition-opacity">
+    <div class="bg-white rounded-2xl w-[380px] max-w-[90vw] p-8 shadow-2xl text-center relative overflow-hidden border border-slate-100">
+        <div class="absolute top-0 left-0 w-full h-2 bg-emerald-500"></div>
+        <div class="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3 mt-2 shadow-sm border border-emerald-100">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
         </div>
-        <h3 class="text-lg font-bold text-[#191c21] mb-1">Transaksi Berhasil</h3>
-        <p id="struk-kode" class="text-sm text-[#424752] mb-4">TRX-000</p>
+        <h3 class="text-xl font-bold text-slate-800 mb-1 tracking-tight">Transaksi Berhasil!</h3>
+        <p id="struk-kode" class="text-[11px] font-bold text-slate-400 mb-5 bg-slate-50 inline-block px-3 py-1 rounded-md border border-slate-200/60">TRX-000</p>
 
-        <div id="struk-detail" class="text-left bg-[#f9f9ff] rounded-xl p-4 mb-4 max-h-[220px] overflow-y-auto text-sm"></div>
+        <div id="struk-detail" class="text-left bg-slate-50 border border-slate-200/60 rounded-xl p-4 mb-5 max-h-[200px] overflow-y-auto text-xs custom-scrollbar space-y-2 shadow-inner"></div>
 
-        <div class="text-left text-sm mb-5 space-y-1">
-            <div class="flex justify-between"><span class="text-[#424752]">Total</span><span id="struk-total" class="font-bold">Rp 0</span></div>
-            <div class="flex justify-between"><span class="text-[#424752]">Bayar</span><span id="struk-bayar" class="font-semibold">Rp 0</span></div>
-            <div class="flex justify-between"><span class="text-[#424752]">Kembalian</span><span id="struk-kembalian" class="font-semibold text-[#00663c]">Rp 0</span></div>
+        <div class="text-left text-xs mb-6 bg-slate-900 text-white rounded-xl p-4 shadow-lg space-y-2">
+            <div class="flex justify-between items-center"><span class="text-slate-400 font-medium">Total</span><span id="struk-total" class="font-extrabold text-base text-white">Rp 0</span></div>
+            <div class="w-full border-t border-slate-700 border-dashed my-1"></div>
+            <div class="flex justify-between items-center"><span class="text-slate-400">Bayar</span><span id="struk-bayar" class="font-medium text-slate-200">Rp 0</span></div>
+            <div class="flex justify-between items-center"><span class="text-slate-400 font-medium">Kembali</span><span id="struk-kembalian" class="font-bold text-emerald-400 text-sm">Rp 0</span></div>
         </div>
 
-        <div class="flex gap-3">
-            <a href="{{ route('kasir.riwayat') }}" class="flex-1 border border-[#c2c6d4] rounded-lg py-3 font-bold text-[#424752] hover:bg-gray-50 text-decoration-none">Lihat Riwayat</a>
-            <button id="btn-transaksi-baru" type="button" class="flex-1 bg-[#003f87] text-white rounded-lg py-3 font-bold hover:bg-[#00316e]">Transaksi Baru</button>
+        <div class="flex gap-2.5">
+            <a href="{{ route('kasir.riwayat') }}" class="flex-1 bg-white border border-slate-200 rounded-xl py-3 font-bold text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors text-decoration-none active:scale-95 flex items-center justify-center shadow-sm">Riwayat</a>
+            <button id="btn-transaksi-baru" type="button" class="flex-[1.5] bg-brand-600 text-white rounded-xl py-3 font-bold text-xs hover:bg-brand-700 transition-all shadow-md active:scale-95">Selesai & Baru</button>
         </div>
     </div>
 </div>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
 
 <script>
 (function () {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     const storeUrl = "{{ route('kasir.transaksi.store') }}";
 
-    let cart = {}; // { buah_id: { id, nama, harga, qty, stok, satuan } }
+    let cart = {}; 
 
     const cartListEl = document.getElementById('cart-list');
     const cartEmptyEl = document.getElementById('cart-empty');
@@ -265,20 +286,20 @@
             btnBayar.disabled = false;
             items.forEach(item => {
                 const row = document.createElement('div');
-                row.className = 'flex items-center gap-3 bg-white rounded-lg border border-[#c2c6d4] p-3';
+                row.className = 'flex items-center gap-3 bg-white rounded-xl border border-slate-200/80 p-3 shadow-sm group hover:border-brand-300 transition-all duration-200';
                 row.innerHTML = `
-                    <div class="flex-1 min-w-0">
-                        <div class="font-bold text-[#191c21] text-sm truncate">${item.nama}</div>
-                        <div class="text-[#424752] text-xs">${formatRupiah(item.harga)} / ${item.satuan}</div>
+                    <div class="flex-1 min-w-0 pl-0.5">
+                        <div class="font-bold text-slate-800 text-xs truncate tracking-tight">${item.nama}</div>
+                        <div class="text-slate-400 text-[10px] font-medium mt-0.5">${formatRupiah(item.harga)} <span class="text-slate-300">/${item.satuan}</span></div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <button type="button" class="btn-qty-min w-7 h-7 rounded-md bg-[#e7e8f0] font-bold text-[#424752] cursor-pointer" data-id="${item.id}">-</button>
-                        <span class="w-6 text-center font-bold text-sm">${item.qty}</span>
-                        <button type="button" class="btn-qty-plus w-7 h-7 rounded-md bg-[#e7e8f0] font-bold text-[#424752] cursor-pointer" data-id="${item.id}">+</button>
+                    <div class="flex items-center bg-slate-50 rounded-lg p-0.5 border border-slate-200/60 shadow-inner">
+                        <button type="button" class="btn-qty-min w-6 h-6 flex items-center justify-center rounded-md hover:bg-white hover:shadow-sm text-xs font-bold text-slate-600 transition-all active:scale-90" data-id="${item.id}">-</button>
+                        <span class="w-7 text-center font-bold text-xs text-slate-800">${item.qty}</span>
+                        <button type="button" class="btn-qty-plus w-6 h-6 flex items-center justify-center rounded-md hover:bg-white hover:shadow-sm text-xs font-bold text-brand-600 transition-all active:scale-90" data-id="${item.id}">+</button>
                     </div>
-                    <div class="w-20 text-right font-bold text-sm text-[#003f87]">${formatRupiah(item.harga * item.qty)}</div>
-                    <button type="button" class="btn-hapus text-[#ba1a1a] cursor-pointer" data-id="${item.id}">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+                    <div class="w-[72px] text-right font-extrabold text-xs text-slate-800 tracking-tight">${formatRupiah(item.harga * item.qty)}</div>
+                    <button type="button" class="btn-hapus text-slate-300 hover:text-red-500 bg-transparent p-1.5 rounded-lg hover:bg-red-50 transition-all active:scale-90" data-id="${item.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
                     </button>
                 `;
                 cartListEl.appendChild(row);
@@ -289,7 +310,6 @@
         totalHargaEl.textContent = formatRupiah(hitungTotal());
     }
 
-    // Tambah ke keranjang
     document.querySelectorAll('.btn-tambah').forEach(btn => {
         btn.addEventListener('click', () => {
             const id = btn.dataset.id;
@@ -311,7 +331,6 @@
         });
     });
 
-    // +/- qty & hapus item (event delegation)
     cartListEl.addEventListener('click', (e) => {
         const minus = e.target.closest('.btn-qty-min');
         const plus = e.target.closest('.btn-qty-plus');
@@ -334,30 +353,33 @@
         }
     });
 
-    // Kosongkan keranjang
     document.getElementById('btn-clear').addEventListener('click', () => {
         cart = {};
         renderCart();
     });
 
-    // Filter kategori
     document.querySelectorAll('.kategori-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.kategori-btn').forEach(b => {
-                b.classList.remove('bg-[#003f87]', 'text-white');
-                b.classList.add('bg-[#e7e8f0]', 'text-[#424752]');
+                b.classList.remove('bg-brand-600', 'text-white', 'shadow-md', 'shadow-brand-600/10');
+                b.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200/60');
             });
-            btn.classList.remove('bg-[#e7e8f0]', 'text-[#424752]');
-            btn.classList.add('bg-[#003f87]', 'text-white');
+            btn.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200/60');
+            btn.classList.add('bg-brand-600', 'text-white', 'shadow-md', 'shadow-brand-600/10');
 
             const kategori = btn.dataset.kategori;
             document.querySelectorAll('.produk-card').forEach(card => {
-                card.style.display = (kategori === 'all' || card.dataset.kategori === kategori) ? '' : 'none';
+                if (kategori === 'all' || card.dataset.kategori === kategori) {
+                    card.style.display = '';
+                    setTimeout(() => card.style.opacity = '1', 10);
+                } else {
+                    card.style.display = 'none';
+                    card.style.opacity = '0';
+                }
             });
         });
     });
 
-    // Search produk
     document.getElementById('search-input').addEventListener('input', (e) => {
         const q = e.target.value.trim().toLowerCase();
         document.querySelectorAll('.produk-card').forEach(card => {
@@ -365,9 +387,19 @@
         });
     });
 
-    // Jam sesi berjalan
     setInterval(() => {
-        document.getElementById('session-clock').textContent = new Date().toLocaleTimeString('id-ID');
+        const now = new Date();
+        const tanggal = now.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+        const jam = String(now.getHours()).padStart(2, '0') + ':' + 
+                    String(now.getMinutes()).padStart(2, '0') + ':' + 
+                    String(now.getSeconds()).padStart(2, '0');
+        
+        document.getElementById('session-clock').innerHTML = `${tanggal} • <span class="text-brand-600 font-bold">${jam}</span> WIB`;
     }, 1000);
 
     // ==== MODAL BAYAR ====
@@ -379,6 +411,22 @@
     const btnKonfirmasi = document.getElementById('btn-konfirmasi-bayar');
     const quickCashEl = document.getElementById('quick-cash');
 
+    const metodeButtons = document.querySelectorAll('.metode-btn');
+    const hiddenMetodeInput = document.getElementById('metode-pembayaran');
+    
+    metodeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            metodeButtons.forEach(b => {
+                b.classList.remove('border-brand-600', 'bg-brand-50/50', 'text-brand-700', 'border-2', 'shadow-sm');
+                b.classList.add('border-slate-200', 'text-slate-600', 'font-semibold');
+                b.classList.remove('font-bold');
+            });
+            btn.classList.remove('border-slate-200', 'text-slate-600', 'font-semibold');
+            btn.classList.add('border-brand-600', 'bg-brand-50/50', 'text-brand-700', 'border-2', 'shadow-sm', 'font-bold');
+            hiddenMetodeInput.value = btn.dataset.value;
+        });
+    });
+
     function bukaModalBayar() {
         const total = hitungTotal();
         modalTotal.textContent = formatRupiah(total);
@@ -388,7 +436,7 @@
 
         const opsi = [total, Math.ceil(total / 5000) * 5000 + 5000, Math.ceil(total / 10000) * 10000 + 10000];
         quickCashEl.innerHTML = [...new Set(opsi)].map(v =>
-            `<button type="button" class="btn-quick-cash flex-1 bg-[#e7e8f0] hover:bg-[#dcdde6] rounded-lg py-2 text-xs font-bold text-[#424752] cursor-pointer" data-value="${v}">${formatRupiah(v)}</button>`
+            `<button type="button" class="btn-quick-cash flex-1 bg-white border border-slate-200 hover:border-brand-300 hover:bg-brand-50 rounded-xl py-2.5 text-xs font-bold text-slate-600 hover:text-brand-700 transition-all active:scale-95 shadow-sm" data-value="${v}">${formatRupiah(v)}</button>`
         ).join('');
 
         modalBayar.classList.remove('hidden');
@@ -413,24 +461,24 @@
         const bayar = parseInt(inputBayar.value || 0, 10);
         const kembalian = bayar - total;
         modalKembalian.textContent = formatRupiah(Math.max(kembalian, 0));
-        modalKembalian.className = kembalian < 0 ? 'text-lg font-bold text-[#ba1a1a]' : 'text-lg font-bold text-[#00663c]';
+        modalKembalian.className = kembalian < 0 ? 'text-lg font-bold text-red-500' : 'text-lg font-black text-emerald-500';
     });
 
     document.getElementById('btn-bayar').addEventListener('click', bukaModalBayar);
-    document.getElementById('btn-batal-bayar').addEventListener('click', tutupModalBayar);
+    document.querySelectorAll('.btn-batal-bayar').forEach(b => b.addEventListener('click', tutupModalBayar));
 
     btnKonfirmasi.addEventListener('click', async () => {
         const total = hitungTotal();
         const bayar = parseInt(inputBayar.value || 0, 10);
 
         if (!bayar || bayar < total) {
-            modalError.textContent = 'Jumlah bayar kurang dari total belanja.';
+            modalError.innerHTML = 'Jumlah uang bayar <b>kurang</b> dari total belanja.';
             modalError.classList.remove('hidden');
             return;
         }
 
         btnKonfirmasi.disabled = true;
-        btnKonfirmasi.textContent = 'Memproses...';
+        btnKonfirmasi.innerHTML = '<span class="flex items-center justify-center gap-2"><svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Memproses...</span>';
 
         try {
             const response = await fetch(storeUrl, {
@@ -443,17 +491,17 @@
                 body: JSON.stringify({
                     items: Object.values(cart).map(i => ({ buah_id: i.id, qty: i.qty })),
                     bayar: bayar,
-                    metode_pembayaran: document.getElementById('metode-pembayaran').value,
+                    metode_pembayaran: hiddenMetodeInput.value,
                 }),
             });
 
             const result = await response.json();
 
             if (!response.ok || !result.success) {
-                modalError.textContent = result.message || 'Terjadi kesalahan, coba lagi.';
+                modalError.textContent = result.message || 'Terjadi kesalahan, silakan coba lagi.';
                 modalError.classList.remove('hidden');
                 btnKonfirmasi.disabled = false;
-                btnKonfirmasi.textContent = 'Konfirmasi';
+                btnKonfirmasi.textContent = 'Konfirmasi Transaksi';
                 return;
             }
 
@@ -462,11 +510,11 @@
             cart = {};
             renderCart();
         } catch (err) {
-            modalError.textContent = 'Gagal menghubungi server. Periksa koneksi Anda.';
+            modalError.textContent = 'Gagal menghubungi server. Periksa koneksi internet Anda.';
             modalError.classList.remove('hidden');
         } finally {
             btnKonfirmasi.disabled = false;
-            btnKonfirmasi.textContent = 'Konfirmasi';
+            btnKonfirmasi.textContent = 'Konfirmasi Transaksi';
         }
     });
 
@@ -480,9 +528,12 @@
         document.getElementById('struk-kembalian').textContent = formatRupiah(trx.kembalian);
 
         document.getElementById('struk-detail').innerHTML = trx.items.map(i => `
-            <div class="flex justify-between py-1">
-                <span class="text-[#424752]">${i.nama_buah} x${i.qty}</span>
-                <span class="font-semibold">${formatRupiah(i.subtotal)}</span>
+            <div class="flex justify-between items-center py-1.5 border-b border-slate-200/60 last:border-0">
+                <div class="flex flex-col">
+                    <span class="text-slate-800 font-bold">${i.nama_buah}</span>
+                    <span class="text-slate-400 text-[10px] mt-0.5">${i.qty} x ${formatRupiah(i.subtotal/i.qty)}</span>
+                </div>
+                <span class="font-bold text-slate-700">${formatRupiah(i.subtotal)}</span>
             </div>
         `).join('');
 
@@ -493,12 +544,10 @@
     document.getElementById('btn-transaksi-baru').addEventListener('click', () => {
         modalStruk.classList.add('hidden');
         modalStruk.classList.remove('flex');
-        // Reload agar data stok produk yang tampil ter-update
         window.location.reload();
     });
 
     renderCart();
 })();
 </script>
-</body>
-</html>
+@endsection

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BuahController;
+use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\RestokController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
@@ -52,10 +53,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/restok', [RestokController::class, 'index'])->name('restok.index');
         Route::post('/restok', [RestokController::class, 'store'])->name('restok.store');
 
-        // Rute Baru: Halaman Tampilan Laporan Penjualan Admin
-        Route::get('/laporan', function () {
-            return view('admin.laporan_penjualan.index');
-        })->name('laporan.index');
+        
+        Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+        Route::get('/laporan/buah', [LaporanController::class, 'buahIndex'])->name('laporan.buah.index');
+        Route::get('/buah/rusak', [BuahController::class, 'rusakIndex'])->name('buah.rusak.index');
     });
 
     // Khusus kasir

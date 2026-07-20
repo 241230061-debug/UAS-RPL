@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Buah;
+use App\Models\BuahRusak;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -56,23 +57,41 @@ class BuahController extends Controller
     }
 
     /**
+     * Tampilkan halaman kelola buah rusak/busuk.
+     */
+    public function rusakIndex(): View
+    {
+        $buah = Buah::orderBy('nama_buah')->paginate(12);
+
+        return view('admin.buah.rusak', compact('buah'));
+    }
+
+    /**
      * Laporkan stok buah rusak/busuk dan kurangi stok.
      */
     public function reportRusak(Request $request, Buah $buah): RedirectResponse
     {
         $validated = $request->validate([
             'jumlah_rusak' => ['required', 'integer', 'min:1'],
+            'alasan' => ['required', 'string', 'max:255'],
         ]);
 
         if ($validated['jumlah_rusak'] > $buah->stok) {
-            return redirect()->route('admin.buah.index')
+            return redirect()->route('admin.buah.rusak.index')
                 ->withErrors(['jumlah_rusak' => 'Jumlah rusak tidak boleh lebih besar dari stok saat ini.'])
                 ->withInput();
         }
 
+        BuahRusak::create([
+            'buah_id' => $buah->id,
+            'user_id' => auth()->id(),
+            'jumlah' => $validated['jumlah_rusak'],
+            'catatan' => $validated['alasan'],
+        ]);
+
         $buah->decrement('stok', $validated['jumlah_rusak']);
 
-        return redirect()->route('admin.buah.index')->with('success', 'Stok buah rusak berhasil dicatat.');
+        return redirect()->route('admin.buah.rusak.index')->with('success', 'Stok buah rusak berhasil dicatat.');
     }
 
     /**
