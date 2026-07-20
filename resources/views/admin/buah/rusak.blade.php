@@ -22,14 +22,20 @@
 
             <hr class="border-slate-100 my-4" />
 
-            <form action="{{ route('admin.buah.rusak', $item) }}" method="POST" class="flex items-center gap-2">
+            <form action="{{ route('admin.buah.rusak', $item) }}" method="POST" class="space-y-2">
                 @csrf
-                <input type="number" name="jumlah_rusak" min="1" max="{{ $item->stok }}" value="{{ old('jumlah_rusak') }}" class="w-full rounded-md border border-slate-200 px-3 py-1.5 text-xs outline-none focus:border-rose-500 transition-colors" placeholder="Jumlah busuk/rusak" required>
-                <button type="submit" class="shrink-0 rounded-md bg-rose-50 border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition-colors whitespace-nowrap">
-                    Laporkan Rusak
-                </button>
+                <div class="grid gap-2 md:grid-cols-[1.2fr_0.6fr_auto]">
+                    <input type="text" name="alasan" value="{{ old('alasan') }}" class="w-full rounded-md border border-slate-200 px-3 py-1.5 text-xs outline-none focus:border-rose-500 transition-colors" placeholder="Alasan rusak/busuk (contoh: busuk, lembab, cacat)" required>
+                    <input type="number" name="jumlah_rusak" min="1" max="{{ $item->stok }}" value="{{ old('jumlah_rusak') }}" class="w-full rounded-md border border-slate-200 px-3 py-1.5 text-xs outline-none focus:border-rose-500 transition-colors" placeholder="Kg" required>
+                    <button type="submit" class="shrink-0 rounded-md bg-rose-50 border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition-colors whitespace-nowrap">
+                        Laporkan Rusak
+                    </button>
+                </div>
             </form>
-            @if($errors->has('jumlah_rusak') && old('_buah_id') == $item->id)
+            @if($errors->has('alasan'))
+                <p class="mt-1 text-[11px] text-rose-600">{{ $errors->first('alasan') }}</p>
+            @endif
+            @if($errors->has('jumlah_rusak'))
                 <p class="mt-1 text-[11px] text-rose-600">{{ $errors->first('jumlah_rusak') }}</p>
             @endif
         </div>

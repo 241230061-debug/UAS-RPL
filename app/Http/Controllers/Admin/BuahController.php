@@ -73,7 +73,7 @@ class BuahController extends Controller
     {
         $validated = $request->validate([
             'jumlah_rusak' => ['required', 'integer', 'min:1'],
-            'catatan' => ['nullable', 'string'],
+            'alasan' => ['required', 'string', 'max:255'],
         ]);
 
         if ($validated['jumlah_rusak'] > $buah->stok) {
@@ -86,7 +86,7 @@ class BuahController extends Controller
             'buah_id' => $buah->id,
             'user_id' => auth()->id(),
             'jumlah' => $validated['jumlah_rusak'],
-            'catatan' => $validated['catatan'] ?? null,
+            'catatan' => $validated['alasan'],
         ]);
 
         $buah->decrement('stok', $validated['jumlah_rusak']);
