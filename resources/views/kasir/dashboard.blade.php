@@ -182,13 +182,7 @@
                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Metode Pembayaran</label>
                 <div class="grid grid-cols-3 gap-2.5" id="payment-methods-grid">
                     <button type="button" data-value="tunai" class="metode-btn flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 border-brand-600 bg-brand-50/50 text-brand-700 font-bold transition-all shadow-sm">
-                        <span class="text-lg">💵</span><span class="text-xs">Tunai</span>
-                    </button>
-                    <button type="button" data-value="qris" class="metode-btn flex flex-col items-center gap-1.5 p-3 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 font-semibold transition-all">
-                        <span class="text-lg">📱</span><span class="text-xs">QRIS</span>
-                    </button>
-                    <button type="button" data-value="debit" class="metode-btn flex flex-col items-center gap-1.5 p-3 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 font-semibold transition-all">
-                        <span class="text-lg">💳</span><span class="text-xs">Debit</span>
+                        <span class="text-xs">Tunai</span>
                     </button>
                 </div>
                 <input type="hidden" id="metode-pembayaran" value="tunai">

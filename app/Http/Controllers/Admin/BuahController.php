@@ -16,7 +16,7 @@ class BuahController extends Controller
      */
     public function index(Request $request): View
     {
-        $lowStockThreshold = 5;
+        $lowStockThreshold = 10;
 
         $buah = Buah::orderBy('nama_buah')
             ->paginate(12);
