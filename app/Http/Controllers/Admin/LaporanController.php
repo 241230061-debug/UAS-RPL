@@ -102,7 +102,7 @@ class LaporanController extends Controller
                 'buah' => $item->buah,
                 'user' => $item->user,
                 'jumlah' => $item->jumlah,
-                'keterangan' => null,
+                'keterangan' => $item->catatan,
                 'catatan' => $item->catatan,
                 'nilai' => $item->buah ? $item->jumlah * $item->buah->harga : 0,
                 'created_at' => $item->created_at,
