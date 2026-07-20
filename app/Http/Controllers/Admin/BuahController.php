@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Buah;
+use App\Models\BuahRusak;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -72,6 +73,7 @@ class BuahController extends Controller
     {
         $validated = $request->validate([
             'jumlah_rusak' => ['required', 'integer', 'min:1'],
+            'catatan' => ['nullable', 'string'],
         ]);
 
         if ($validated['jumlah_rusak'] > $buah->stok) {
@@ -79,6 +81,13 @@ class BuahController extends Controller
                 ->withErrors(['jumlah_rusak' => 'Jumlah rusak tidak boleh lebih besar dari stok saat ini.'])
                 ->withInput();
         }
+
+        BuahRusak::create([
+            'buah_id' => $buah->id,
+            'user_id' => auth()->id(),
+            'jumlah' => $validated['jumlah_rusak'],
+            'catatan' => $validated['catatan'] ?? null,
+        ]);
 
         $buah->decrement('stok', $validated['jumlah_rusak']);
 

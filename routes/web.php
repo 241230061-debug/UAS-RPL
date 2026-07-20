@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
 
         
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+        Route::get('/laporan/buah', [LaporanController::class, 'buahIndex'])->name('laporan.buah.index');
         Route::get('/buah/rusak', [BuahController::class, 'rusakIndex'])->name('buah.rusak.index');
     });
 
