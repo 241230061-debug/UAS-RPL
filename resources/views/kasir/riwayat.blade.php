@@ -54,7 +54,6 @@
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
                         <div class="flex items-center gap-4">
                             <div class="text-right">
                                 <div class="text-sm text-slate-600">Metode: {{ ucfirst($trx->metode_pembayaran) }}</div>
@@ -71,25 +70,6 @@
                                     data-items='{{ $trx->items->map(fn($i) => ["nama" => $i->buah->nama_buah ?? "Produk dihapus", "qty" => $i->qty, "harga" => "Rp " . number_format($i->harga, 0, ",", "."), "subtotal" => "Rp " . number_format($i->subtotal, 0, ",", ".")])->toJson() }}'>
                                 Detail Transaksi
                             </button>
-=======
-                        
-                        {{-- FINANSIAL METODE DAN NOMINAL --}}
-                        <div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-2 select-none border-t border-slate-100 pt-3 md:border-0 md:pt-0">
-                            @php
-                                $metode = strtolower($trx->metode_pembayaran);
-                                $badgeColor = $metode === 'tunai' 
-                                    ? 'bg-amber-50/80 text-amber-700 border-amber-200/60 shadow-amber-600/5' 
-                                    : ($metode === 'qris' ? 'bg-indigo-50/80 text-indigo-700 border-indigo-200/60 shadow-indigo-600/5' : 'bg-blue-50/80 text-blue-700 border-blue-200/60 shadow-blue-600/5');
-                                $icon = $metode === 'tunai' ? '💵' : ($metode === 'qris' ? '📱' : '💳');
-                            @endphp
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border shadow-sm {{ $badgeColor }}">
-                                <span>{{ $icon }}</span>
-                                <span>{{ $trx->metode_pembayaran }}</span>
-                            </span>
-                            <div class="text-xl font-black text-brand-600 tracking-tight group-hover:scale-105 transition-transform origin-right">
-                                Rp {{ number_format($trx->total_harga, 0, ',', '.') }}
-                            </div>
->>>>>>> 5679040295cc106b637237d2fdbd1323b20fbc2a
                         </div>
                     </div>
 
@@ -129,7 +109,6 @@
     @endif
 </div>
 
-<<<<<<< HEAD
 {{-- MODAL DETAIL TRANSAKSI --}}
 <div id="modal-detail-riwayat" class="hidden fixed inset-0 bg-black/40 z-40 items-center justify-center p-4">
     <div class="bg-white rounded-2xl w-[420px] max-w-full p-6 shadow-xl max-h-[90vh] overflow-y-auto">
@@ -190,21 +169,3 @@
 })();
 </script>
 @endsection
-=======
-<style>
-    /* Animasi fade in halus */
-    .animate-fade-in {
-        animation: fadeIn 0.4s ease-out forwards;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* Normalisasi style link bawaan laravel pagination */
-    .custom-pagination nav {
-        @apply shadow-sm rounded-xl overflow-hidden border border-slate-200/80 bg-white p-1;
-    }
-</style>
-@endsection
->>>>>>> 5679040295cc106b637237d2fdbd1323b20fbc2a
