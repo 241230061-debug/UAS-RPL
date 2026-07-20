@@ -39,11 +39,27 @@
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-200/70 rounded-xl text-slate-600 no-underline font-medium transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-brand-500 text-white font-semibold shadow-sm shadow-brand-500/20' : '' }}">
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ route('admin.buah.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-200/70 rounded-xl text-slate-600 no-underline font-medium transition-all duration-200 {{ request()->routeIs('admin.buah.*') ? 'bg-brand-500 text-white font-semibold shadow-sm shadow-brand-500/20' : '' }}">
-                    <span>Data Buah</span>
-                </a>
+                <details class="group" {{ request()->routeIs('admin.buah.*') ? 'open' : '' }}>
+                    <summary class="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer list-none hover:bg-slate-200/70 rounded-xl text-slate-600 font-medium transition-all duration-200 {{ request()->routeIs('admin.buah.*') ? 'bg-brand-500 text-white font-semibold shadow-sm shadow-brand-500/20' : '' }}">
+                        <span>Data Master</span>
+                        <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </summary>
+                    <div class="mt-1 ml-3 pl-3 border-l border-slate-200 flex flex-col gap-1">
+                        <a href="{{ route('admin.buah.index') }}" class="block px-4 py-2 rounded-lg text-sm no-underline transition-all duration-200 {{ request()->routeIs('admin.buah.index') || request()->routeIs('admin.buah.edit') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-500 hover:bg-slate-200/70' }}">
+                            Kelola Data Buah
+                        </a>
+                        <a href="{{ route('admin.buah.rusak.index') }}" class="block px-4 py-2 rounded-lg text-sm no-underline transition-all duration-200 {{ request()->routeIs('admin.buah.rusak.*') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-500 hover:bg-slate-200/70' }}">
+                            Lapor Buah Rusak/Busuk
+                        </a>
+                    </div>
+                </details>
                 <a href="{{ route('admin.restok.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-200/70 rounded-xl text-slate-600 no-underline font-medium transition-all duration-200 {{ request()->routeIs('admin.restok.*') ? 'bg-brand-500 text-white font-semibold shadow-sm shadow-brand-500/20' : '' }}">
                     <span>Pembelian & Restok</span>
+                </a>
+                <a href="{{ route('admin.laporan.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-200/70 rounded-xl text-slate-600 no-underline font-medium transition-all duration-200 {{ request()->routeIs('admin.laporan.*') ? 'bg-brand-500 text-white font-semibold shadow-sm shadow-brand-500/20' : '' }}">
+                    <span>Laporan Transaksi</span>
                 </a>
                 <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-200/70 rounded-xl text-slate-600 no-underline font-medium transition-all duration-200 {{ request()->routeIs('admin.users.*') ? 'bg-brand-500 text-white font-semibold shadow-sm shadow-brand-500/20' : '' }}">
                     <span>Manajemen Pengguna</span>

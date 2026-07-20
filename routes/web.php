@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BuahController;
+use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\RestokController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
@@ -50,6 +51,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/restok', [RestokController::class, 'index'])->name('restok.index');
         Route::post('/restok', [RestokController::class, 'store'])->name('restok.store');
+
+        
+        Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+        Route::get('/buah/rusak', [BuahController::class, 'rusakIndex'])->name('buah.rusak.index');
     });
 
     // Khusus kasir

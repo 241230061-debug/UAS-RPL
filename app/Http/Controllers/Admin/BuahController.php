@@ -56,6 +56,16 @@ class BuahController extends Controller
     }
 
     /**
+     * Tampilkan halaman kelola buah rusak/busuk.
+     */
+    public function rusakIndex(): View
+    {
+        $buah = Buah::orderBy('nama_buah')->paginate(12);
+
+        return view('admin.buah.rusak', compact('buah'));
+    }
+
+    /**
      * Laporkan stok buah rusak/busuk dan kurangi stok.
      */
     public function reportRusak(Request $request, Buah $buah): RedirectResponse
@@ -65,14 +75,14 @@ class BuahController extends Controller
         ]);
 
         if ($validated['jumlah_rusak'] > $buah->stok) {
-            return redirect()->route('admin.buah.index')
+            return redirect()->route('admin.buah.rusak.index')
                 ->withErrors(['jumlah_rusak' => 'Jumlah rusak tidak boleh lebih besar dari stok saat ini.'])
                 ->withInput();
         }
 
         $buah->decrement('stok', $validated['jumlah_rusak']);
 
-        return redirect()->route('admin.buah.index')->with('success', 'Stok buah rusak berhasil dicatat.');
+        return redirect()->route('admin.buah.rusak.index')->with('success', 'Stok buah rusak berhasil dicatat.');
     }
 
     /**
