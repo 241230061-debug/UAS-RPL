@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('buah_rusak', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('buah_id')->constrained('buah')->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('buah_id')->nullable()->constrained('buah')->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->unsignedInteger('jumlah');
             $table->text('catatan')->nullable();
             $table->timestamps();

@@ -34,6 +34,22 @@
         </form>
     </div>
 
+    {{-- RINGKASAN --}}
+    <div class="grid gap-4 sm:grid-cols-3">
+        <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
+            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Log Kerusakan</div>
+            <div class="text-xl font-extrabold text-slate-900 mt-1">{{ number_format($riwayatPaginated->total(), 0, ',', '.') }} laporan</div>
+        </div>
+        <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
+            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Buah Rusak</div>
+            <div class="text-xl font-extrabold text-red-600 mt-1">{{ number_format($totalRusak, 0, ',', '.') }} Kg</div>
+        </div>
+        <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
+            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Estimasi Kerugian</div>
+            <div class="text-xl font-extrabold text-brand-600 mt-1">Rp {{ number_format($totalKerugianRusak, 0, ',', '.') }}</div>
+        </div>
+    </div>
+
     {{-- TABEL DATA BUAH RUSAK --}}
     <div class="rounded-2xl bg-white border border-slate-200 p-6 shadow-sm">
         <h2 class="text-base font-bold text-slate-900 mb-4 pb-3 border-b border-slate-100">Daftar Riwayat Buah Rusak</h2>

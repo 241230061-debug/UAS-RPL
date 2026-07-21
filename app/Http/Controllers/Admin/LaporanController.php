@@ -100,42 +100,38 @@ class LaporanController extends Controller
     }
 
     /**
-     * Tampilkan laporan pergerakan stok buah: masuk (restok/pembelian) dan rusak/busuk.
+     * Tampilkan laporan buah rusak/busuk.
+     *
+     * Catatan perbaikan: sebelumnya method ini ikut menggabungkan data
+     * Restok (buah masuk) ke dalam daftar yang ditampilkan, sehingga
+     * data restok (mis. nama supplier) muncul seolah-olah sebagai baris
+     * laporan buah rusak yang belum pernah diinput. Halaman ini khusus
+     * untuk laporan buah rusak, jadi hanya data BuahRusak yang diambil.
      */
     public function buahIndex(Request $request): View
     {
         $tanggalAwal = $request->query('tanggal_awal') ?: now()->startOfMonth()->format('Y-m-d');
         $tanggalAkhir = $request->query('tanggal_akhir') ?: now()->format('Y-m-d');
-        $jenis = $request->query('jenis'); // 'masuk', 'rusak', atau kosong (semua)
         $buahId = $request->query('buah_id');
 
         $mulai = Carbon::parse($tanggalAwal)->startOfDay();
         $selesai = Carbon::parse($tanggalAkhir)->endOfDay();
 
-        // Riwayat buah masuk (dari restok/pembelian)
-        $restok = Restok::with(['buah', 'user'])
+        // Riwayat buah rusak/busuk saja
+        $rusakQuery = BuahRusak::with(['buah', 'user'])
             ->whereBetween('created_at', [$mulai, $selesai])
-            ->when($buahId, fn ($q) => $q->where('buah_id', $buahId))
-            ->get()
-            ->map(fn ($item) => (object) [
-                'jenis' => 'masuk',
-                'buah' => $item->buah,
-                'user' => $item->user,
-                'jumlah' => $item->jumlah,
-                'keterangan' => $item->supplier,
-                'catatan' => $item->catatan,
-                'nilai' => $item->total_biaya,
-                'created_at' => $item->created_at,
-            ]);
+            ->when($buahId, fn ($q) => $q->where('buah_id', $buahId));
 
-        // Riwayat buah rusak/busuk
-        $rusak = BuahRusak::with(['buah', 'user'])
-            ->whereBetween('created_at', [$mulai, $selesai])
-            ->when($buahId, fn ($q) => $q->where('buah_id', $buahId))
-            ->get()
-            ->map(fn ($item) => (object) [
+        $totalRusak = (int) (clone $rusakQuery)->sum('jumlah');
+
+        $riwayatPaginated = $rusakQuery
+            ->orderByDesc('created_at')
+            ->paginate(15)
+            ->withQueryString()
+            ->through(fn ($item) => (object) [
                 'jenis' => 'rusak',
                 'buah' => $item->buah,
+                'nama_buah' => $item->buah->nama_buah ?? null,
                 'user' => $item->user,
                 'jumlah' => $item->jumlah,
                 'keterangan' => $item->catatan,
@@ -144,31 +140,8 @@ class LaporanController extends Controller
                 'created_at' => $item->created_at,
             ]);
 
-        // Gabungkan lalu filter jenis bila diminta
-        $riwayat = new Collection([...$restok, ...$rusak]);
-
-        if ($jenis === 'masuk' || $jenis === 'rusak') {
-            $riwayat = $riwayat->where('jenis', $jenis);
-        }
-
-        $riwayat = $riwayat->sortByDesc('created_at')->values();
-
-        // Ringkasan
-        $totalMasuk = (int) $restok->sum('jumlah');
-        $totalRusak = (int) $rusak->sum('jumlah');
-        $totalBiayaRestok = (int) $restok->sum('nilai');
-        $totalKerugianRusak = (int) $rusak->sum('nilai');
-
-        // Pagination manual (data sudah digabung dari dua sumber)
-        $page = (int) $request->query('page', 1);
-        $perPage = 15;
-        $riwayatPaginated = new LengthAwarePaginator(
-            $riwayat->forPage($page, $perPage)->values(),
-            $riwayat->count(),
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
+        $totalKerugianRusak = (int) (clone $rusakQuery)->get()
+            ->sum(fn ($item) => $item->buah ? $item->jumlah * $item->buah->harga : 0);
 
         $daftarBuah = Buah::orderBy('nama_buah')->get();
 
@@ -176,12 +149,9 @@ class LaporanController extends Controller
             'riwayatPaginated',
             'tanggalAwal',
             'tanggalAkhir',
-            'jenis',
             'buahId',
             'daftarBuah',
-            'totalMasuk',
             'totalRusak',
-            'totalBiayaRestok',
             'totalKerugianRusak',
         ));
     }

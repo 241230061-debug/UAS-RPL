@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('restok', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('buah_id')->constrained('buah')->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('buah_id')->nullable()->constrained('buah')->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('supplier')->nullable();
             $table->unsignedInteger('jumlah');
             $table->unsignedBigInteger('harga_beli');
