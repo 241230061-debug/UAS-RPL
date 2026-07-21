@@ -36,7 +36,7 @@
                     @error('jumlah')<p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
                 <div>
-                    <label class="block mb-1.5 text-sm font-semibold text-slate-700">Harga Beli / Satuan</label>
+                    <label class="block mb-1.5 text-sm font-semibold text-slate-700">Harga Beli / Kg</label>
                     <div class="relative flex items-center">
                         <span class="absolute left-3 text-sm text-slate-400 font-medium">Rp</span>
                         <input type="number" name="harga_beli" value="{{ old('harga_beli') }}" placeholder="0" class="w-full rounded-xl border border-slate-300 pl-9 pr-3 py-2.5 text-sm text-slate-800 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-all box-border" min="0" required>
