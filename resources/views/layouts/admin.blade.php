@@ -73,6 +73,9 @@
                         <a href="{{ route('admin.laporan.index') }}" class="block px-4 py-2 rounded-lg text-sm no-underline transition-all duration-200 {{ request()->routeIs('admin.laporan.index') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-500 hover:bg-slate-200/70' }}">
                             Laporan Transaksi
                         </a>
+                        <a href="{{ route('admin.laporan.restok.index') }}" class="block px-4 py-2 rounded-lg text-sm no-underline transition-all duration-200 {{ request()->routeIs('admin.laporan.restok.index') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-500 hover:bg-slate-200/70' }}">
+                            Laporan Restok
+                        </a>
                         <a href="{{ route('admin.laporan.buah.index') }}" class="block px-4 py-2 rounded-lg text-sm no-underline transition-all duration-200 {{ request()->routeIs('admin.laporan.buah.index') ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-500 hover:bg-slate-200/70' }}">
                             Laporan Buah Rusak
                         </a>

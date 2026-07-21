@@ -59,11 +59,21 @@ class BuahController extends Controller
     /**
      * Tampilkan halaman kelola buah rusak/busuk.
      */
-    public function rusakIndex(): View
+    public function rusakIndex(Request $request): View
     {
-        $buah = Buah::orderBy('nama_buah')->paginate(12);
+        $search = $request->query('search');
 
-        return view('admin.buah.rusak', compact('buah'));
+        $buah = Buah::query()
+            ->when($search, fn ($q) => $q->where(function ($q) use ($search) {
+                $q->where('nama_buah', 'like', "%{$search}%")
+                    ->orWhere('kode', 'like', "%{$search}%")
+                    ->orWhere('kategori', 'like', "%{$search}%");
+            }))
+            ->orderBy('nama_buah')
+            ->paginate(8)
+            ->withQueryString();
+
+        return view('admin.buah.rusak', compact('buah', 'search'));
     }
 
     /**

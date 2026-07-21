@@ -20,7 +20,8 @@ class RestokController extends Controller
 
         $restok = Restok::with('buah', 'user')
             ->orderByDesc('created_at')
-            ->paginate(15);
+            ->limit(5)
+            ->get();
 
         return view('admin.restok.index', compact('buah', 'restok', 'selectedBuahId'));
     }

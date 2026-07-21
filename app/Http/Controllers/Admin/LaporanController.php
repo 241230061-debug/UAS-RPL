@@ -64,6 +64,42 @@ class LaporanController extends Controller
     }
 
     /**
+     * Tampilkan laporan restok/pembelian buah dari supplier.
+     */
+    public function restokIndex(Request $request): View
+    {
+        $tanggalAwal = $request->query('tanggal_awal') ?: now()->startOfMonth()->format('Y-m-d');
+        $tanggalAkhir = $request->query('tanggal_akhir') ?: now()->format('Y-m-d');
+        $buahId = $request->query('buah_id');
+
+        $mulai = Carbon::parse($tanggalAwal)->startOfDay();
+        $selesai = Carbon::parse($tanggalAkhir)->endOfDay();
+
+        $query = Restok::with(['buah', 'user'])
+            ->whereBetween('created_at', [$mulai, $selesai])
+            ->when($buahId, fn ($q) => $q->where('buah_id', $buahId));
+
+        $totalTransaksi = (clone $query)->count();
+        $totalJumlah = (int) (clone $query)->sum('jumlah');
+        $totalBiaya = (int) (clone $query)->sum('total_biaya');
+
+        $restok = $query->orderByDesc('created_at')->paginate(15)->withQueryString();
+
+        $daftarBuah = Buah::orderBy('nama_buah')->get();
+
+        return view('admin.laporan.restok', compact(
+            'restok',
+            'tanggalAwal',
+            'tanggalAkhir',
+            'buahId',
+            'daftarBuah',
+            'totalTransaksi',
+            'totalJumlah',
+            'totalBiaya',
+        ));
+    }
+
+    /**
      * Tampilkan laporan pergerakan stok buah: masuk (restok/pembelian) dan rusak/busuk.
      */
     public function buahIndex(Request $request): View
