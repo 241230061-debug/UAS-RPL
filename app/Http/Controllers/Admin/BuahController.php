@@ -38,7 +38,7 @@ class BuahController extends Controller
             'nama_buah' => ['required', 'string', 'max:255'],
             'kategori' => ['nullable', 'string', 'max:100'],
             'harga' => ['required', 'integer', 'min:0'],
-            'stok' => ['required', 'integer', 'min:0'],
+            'stok' => ['required', 'numeric', 'min:0'],
             'satuan' => ['required', 'string', 'max:50'],
             'gambar' => ['nullable', 'image', 'max:2048'],
             'keterangan' => ['nullable', 'string'],
@@ -82,7 +82,7 @@ class BuahController extends Controller
     public function reportRusak(Request $request, Buah $buah): RedirectResponse
     {
         $validated = $request->validate([
-            'jumlah_rusak' => ['required', 'integer', 'min:1'],
+            'jumlah_rusak' => ['required', 'numeric', 'gt:0'],
             'alasan' => ['required', 'string', 'max:255'],
         ]);
 
@@ -122,7 +122,7 @@ class BuahController extends Controller
             'nama_buah' => ['required', 'string', 'max:255'],
             'kategori' => ['nullable', 'string', 'max:100'],
             'harga' => ['required', 'integer', 'min:0'],
-            'stok' => ['required', 'integer', 'min:0'],
+            'stok' => ['required', 'numeric', 'min:0'],
             'satuan' => ['required', 'string', 'max:50'],
             'gambar' => ['nullable', 'image', 'max:2048'],
             'keterangan' => ['nullable', 'string'],

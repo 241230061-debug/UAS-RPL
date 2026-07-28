@@ -51,7 +51,7 @@
                     <div class="min-w-0">
                         <div class="font-bold text-slate-900 text-sm truncate">{{ $item->nama_buah }}</div>
                         <div class="text-xs text-slate-500 mt-0.5">
-                            Stok: <strong class="text-slate-800">{{ $item->stok }} {{ $item->satuan }}</strong>
+                            Stok: <strong class="text-slate-800">{{ (float) $item->stok }} {{ $item->satuan }}</strong>
                         </div>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                             @enderror
                         </div>
                         <div>
-                            <input type="number" name="jumlah_rusak" min="1" max="{{ $item->stok }}" value="{{ old('jumlah_rusak') }}" class="w-full rounded-md border border-slate-200 px-3 py-2 text-xs outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-colors" placeholder="Jumlah ({{ $item->satuan }})" required>
+                            <input type="number" step="any" name="jumlah_rusak" min="0.01" max="{{ (float)$item->stok }}" value="{{ old('jumlah_rusak') }}" class="w-full rounded-md border border-slate-200 px-3 py-2 text-xs outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-colors" placeholder="Jumlah ({{ $item->satuan }})" required>
                             @error('jumlah_rusak')
                                 <p class="mt-1 text-[11px] text-rose-600">{{ $message }}</p>
                             @enderror

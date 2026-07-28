@@ -32,6 +32,6 @@ class BuahRusakReportTest extends TestCase
             'catatan' => 'Busuk karena lembab',
         ]);
 
-        $this->assertSame(7, $buah->fresh()->stok);
+        $this->assertEquals(7, $buah->fresh()->stok);
     }
 }

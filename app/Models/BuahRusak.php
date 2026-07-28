@@ -21,6 +21,10 @@ class BuahRusak extends Model
 
     protected $table = 'buah_rusak';
 
+    protected $casts = [
+        'jumlah' => 'float',
+    ];
+
     public function buah(): BelongsTo
     {
         return $this->belongsTo(Buah::class);

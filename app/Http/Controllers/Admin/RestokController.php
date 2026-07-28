@@ -31,14 +31,14 @@ class RestokController extends Controller
         $validated = $request->validate([
             'buah_id' => ['required', 'integer', 'exists:buah,id'],
             'supplier' => ['required', 'string', 'max:255'],
-            'jumlah' => ['required', 'integer', 'min:1'],
+            'jumlah' => ['required', 'numeric', 'gt:0'],
             'harga_beli' => ['required', 'integer', 'min:0'],
             'catatan' => ['nullable', 'string'],
         ]);
 
         $buah = Buah::findOrFail($validated['buah_id']);
         $validated['user_id'] = auth()->id();
-        $validated['total_biaya'] = $validated['jumlah'] * $validated['harga_beli'];
+        $validated['total_biaya'] = (int) round($validated['jumlah'] * $validated['harga_beli']);
 
         Restok::create($validated);
 

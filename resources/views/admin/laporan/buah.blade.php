@@ -42,7 +42,7 @@
         </div>
         <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
             <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Buah Rusak</div>
-            <div class="text-xl font-extrabold text-red-600 mt-1">{{ number_format($totalRusak, 0, ',', '.') }} Kg</div>
+            <div class="text-xl font-extrabold text-red-600 mt-1">{{ number_format($totalRusak, $totalRusak == (int)$totalRusak ? 0 : 2, ',', '.') }} Kg</div>
         </div>
         <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
             <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Estimasi Kerugian</div>
@@ -83,7 +83,7 @@
                             
                             {{-- MEMPERBAIKI: Menggunakan properti 'jumlah' sesuai migration --}}
                             <td class="py-3 pr-4 text-center font-bold text-red-600">
-                                {{ $item->jumlah ?? 0 }} Kg
+                                {{ (float) ($item->jumlah ?? 0) }} Kg
                             </td>
                             
                             {{-- MEMPERBAIKI: Menggunakan properti 'catatan' sesuai migration --}}

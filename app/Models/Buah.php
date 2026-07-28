@@ -37,7 +37,7 @@ class Buah extends Model
     {
         return [
             'harga' => 'integer',
-            'stok' => 'integer',
+            'stok' => 'float',
             'aktif' => 'boolean',
         ];
     }

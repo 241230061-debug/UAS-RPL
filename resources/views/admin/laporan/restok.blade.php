@@ -42,7 +42,7 @@
         </div>
         <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
             <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Jumlah Masuk</div>
-            <div class="text-xl font-extrabold text-slate-900 mt-1">{{ number_format($totalJumlah, 0, ',', '.') }} Kg</div>
+            <div class="text-xl font-extrabold text-slate-900 mt-1">{{ number_format($totalJumlah, $totalJumlah == (int)$totalJumlah ? 0 : 2, ',', '.') }} Kg</div>
         </div>
         <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
             <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Biaya</div>
@@ -75,7 +75,7 @@
                             <td class="py-3 pr-4 text-slate-600 whitespace-nowrap">{{ $item->created_at->format('d M Y H:i') }}</td>
                             <td class="py-3 pr-4 font-semibold text-slate-900">{{ $item->buah->nama_buah ?? 'Produk dihapus' }}</td>
                             <td class="py-3 pr-4 text-slate-600">{{ $item->supplier }}</td>
-                            <td class="py-3 pr-4 text-center font-bold text-emerald-600 whitespace-nowrap">{{ $item->jumlah }} Kg</td>
+                            <td class="py-3 pr-4 text-center font-bold text-emerald-600 whitespace-nowrap">{{ (float) $item->jumlah }} Kg</td>
                             <td class="py-3 pr-4 text-right font-semibold text-slate-800 whitespace-nowrap">Rp {{ number_format($item->total_biaya, 0, ',', '.') }}</td>
                             <td class="py-3 pr-4 text-slate-500 text-xs">{{ $item->user->name ?? 'Admin' }}</td>
                         </tr>

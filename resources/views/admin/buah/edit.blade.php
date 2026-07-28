@@ -99,7 +99,7 @@
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-semibold text-[#424752]">Stok</label>
-                            <input type="number" name="stok" value="{{ old('stok', $buah->stok) }}" class="w-full rounded-xl border border-[#c2c6d4] px-3 py-3 text-sm" min="0" required>
+                            <input type="number" step="any" name="stok" value="{{ old('stok', (float)$buah->stok) }}" class="w-full rounded-xl border border-[#c2c6d4] px-3 py-3 text-sm" min="0" required>
                             @error('stok')<p class="mt-1 text-xs text-[#ba1a1a]">{{ $message }}</p>@enderror
                         </div>
                     </div>

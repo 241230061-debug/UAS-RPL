@@ -36,7 +36,7 @@ class LaporanController extends Controller
         $ringkasanQuery = (clone $query);
         $totalTransaksi = $ringkasanQuery->count();
         $totalPendapatan = (clone $query)->sum('total_harga');
-        $totalItemTerjual = (int) TransaksiItem::whereIn('transaksi_id', (clone $query)->pluck('id'))->sum('qty');
+        $totalItemTerjual = (float) TransaksiItem::whereIn('transaksi_id', (clone $query)->pluck('id'))->sum('qty');
         $rataRataTransaksi = $totalTransaksi > 0 ? intdiv($totalPendapatan, $totalTransaksi) : 0;
 
         // Produk terlaris pada rentang tanggal terpilih
@@ -80,7 +80,7 @@ class LaporanController extends Controller
             ->when($buahId, fn ($q) => $q->where('buah_id', $buahId));
 
         $totalTransaksi = (clone $query)->count();
-        $totalJumlah = (int) (clone $query)->sum('jumlah');
+        $totalJumlah = (float) (clone $query)->sum('jumlah');
         $totalBiaya = (int) (clone $query)->sum('total_biaya');
 
         $restok = $query->orderByDesc('created_at')->paginate(15)->withQueryString();
@@ -122,7 +122,7 @@ class LaporanController extends Controller
             ->whereBetween('created_at', [$mulai, $selesai])
             ->when($buahId, fn ($q) => $q->where('buah_id', $buahId));
 
-        $totalRusak = (int) (clone $rusakQuery)->sum('jumlah');
+        $totalRusak = (float) (clone $rusakQuery)->sum('jumlah');
 
         $riwayatPaginated = $rusakQuery
             ->orderByDesc('created_at')

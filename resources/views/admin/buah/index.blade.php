@@ -54,7 +54,7 @@
                 <div>
                     <label class="block mb-1.5 text-xs font-semibold text-slate-700 uppercase tracking-wider">Stok Awal</label>
                     <div class="flex rounded-lg border border-slate-300 bg-slate-50 focus-within:bg-white focus-within:border-brand-500 focus-within:ring-1 focus-within:ring-brand-500 overflow-hidden transition-all">
-                        <input type="number" name="stok" value="{{ old('stok', 0) }}" class="w-full bg-transparent border-0 px-3 py-2 text-sm outline-none" min="0" required>
+                        <input type="number" step="any" name="stok" value="{{ old('stok', 0) }}" class="w-full bg-transparent border-0 px-3 py-2 text-sm outline-none" min="0" required>
                         <input type="text" name="satuan" value="{{ old('satuan', 'kg') }}" class="w-16 text-center bg-slate-200 border-0 border-l border-slate-300 text-xs font-semibold text-slate-600 outline-none uppercase" required>
                     </div>
                     @error('stok')<p class="mt-1 text-xs text-rose-600">{{ $message }}</p>@enderror
@@ -116,14 +116,13 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-2 mt-3 text-xs text-slate-500 font-medium flex-wrap">
-                        <span>Stok: <strong class="text-slate-800">{{ $item->stok }} {{ $item->satuan }}</strong></span>
+                    <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-100 pt-3 mt-auto">
+                        <span>Stok: <strong class="text-slate-800">{{ (float) $item->stok }} {{ $item->satuan }}</strong></span>
                         @if($item->stok <= $lowStockThreshold)
                             <span class="rounded-md bg-rose-50 px-2 py-0.5 text-[11px] font-semibold text-rose-700 border border-rose-200">Kritis</span>
                         @endif
                     </div>
 
-                    <hr class="border-slate-100 my-3" />
 
                     <!-- Aksi -->
                     <div class="flex items-center justify-end gap-1.5 mt-auto">

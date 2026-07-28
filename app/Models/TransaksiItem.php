@@ -24,6 +24,10 @@ class TransaksiItem extends Model
 
     protected $table = 'transaksi_items';
 
+    protected $casts = [
+        'qty' => 'float',
+    ];
+
     public function transaksi(): BelongsTo
     {
         return $this->belongsTo(Transaksi::class);

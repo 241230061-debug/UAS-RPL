@@ -288,7 +288,7 @@
                     </div>
                     <div class="flex items-center bg-slate-50 rounded-lg p-0.5 border border-slate-200/60 shadow-inner">
                         <button type="button" class="btn-qty-min w-6 h-6 flex items-center justify-center rounded-md hover:bg-white hover:shadow-sm text-xs font-bold text-slate-600 transition-all active:scale-90" data-id="${item.id}">-</button>
-                        <span class="w-7 text-center font-bold text-xs text-slate-800">${item.qty}</span>
+                        <input type="number" step="any" min="0.01" max="${item.stok}" class="input-qty w-12 text-center font-bold text-xs text-slate-800 bg-transparent border-0 outline-none p-0 focus:ring-0" value="${item.qty}" data-id="${item.id}" />
                         <button type="button" class="btn-qty-plus w-6 h-6 flex items-center justify-center rounded-md hover:bg-white hover:shadow-sm text-xs font-bold text-brand-600 transition-all active:scale-90" data-id="${item.id}">+</button>
                     </div>
                     <div class="w-[72px] text-right font-extrabold text-xs text-slate-800 tracking-tight">${formatRupiah(item.harga * item.qty)}</div>
@@ -300,29 +300,69 @@
             });
         }
 
-        totalItemEl.textContent = hitungTotalItem();
+        totalItemEl.textContent = Number(hitungTotalItem()).toLocaleString('id-ID', { maximumFractionDigits: 2 });
         totalHargaEl.textContent = formatRupiah(hitungTotal());
     }
 
     document.querySelectorAll('.btn-tambah').forEach(btn => {
         btn.addEventListener('click', () => {
             const id = btn.dataset.id;
-            const stok = parseInt(btn.dataset.stok, 10);
+            const stok = parseFloat(btn.dataset.stok);
             if (!cart[id]) {
-                if (stok < 1) return;
+                if (stok <= 0) return;
                 cart[id] = {
                     id: id,
                     nama: btn.dataset.nama,
                     harga: parseInt(btn.dataset.harga, 10),
                     satuan: btn.dataset.satuan,
                     stok: stok,
-                    qty: 1,
+                    qty: Math.min(stok, 1),
                 };
             } else if (cart[id].qty < stok) {
-                cart[id].qty += 1;
+                cart[id].qty = Math.min(stok, cart[id].qty + 1);
             }
             renderCart();
         });
+    });
+
+    cartListEl.addEventListener('change', (e) => {
+        const input = e.target.closest('.input-qty');
+        if (input) {
+            const id = input.dataset.id;
+            let val = parseFloat(input.value);
+            if (isNaN(val) || val <= 0) {
+                val = 0.01;
+            }
+            if (val > cart[id].stok) {
+                val = cart[id].stok;
+            }
+            cart[id].qty = val;
+            renderCart();
+        }
+    });
+
+    cartListEl.addEventListener('input', (e) => {
+        const input = e.target.closest('.input-qty');
+        if (input) {
+            const id = input.dataset.id;
+            let val = parseFloat(input.value);
+            if (!isNaN(val) && val > 0) {
+                if (val > cart[id].stok) {
+                    val = cart[id].stok;
+                    input.value = val;
+                }
+                cart[id].qty = val;
+                totalItemEl.textContent = Number(hitungTotalItem()).toLocaleString('id-ID', { maximumFractionDigits: 2 });
+                totalHargaEl.textContent = formatRupiah(hitungTotal());
+                const row = input.closest('.flex');
+                if (row) {
+                    const subtotalEl = row.querySelector('.w-\\[72px\\]');
+                    if (subtotalEl) {
+                        subtotalEl.textContent = formatRupiah(cart[id].harga * cart[id].qty);
+                    }
+                }
+            }
+        }
     });
 
     cartListEl.addEventListener('click', (e) => {
@@ -332,13 +372,15 @@
 
         if (minus) {
             const id = minus.dataset.id;
-            cart[id].qty -= 1;
+            cart[id].qty = Math.max(0, cart[id].qty - 1);
             if (cart[id].qty <= 0) delete cart[id];
             renderCart();
         }
         if (plus) {
             const id = plus.dataset.id;
-            if (cart[id].qty < cart[id].stok) cart[id].qty += 1;
+            if (cart[id].qty < cart[id].stok) {
+                cart[id].qty = Math.min(cart[id].stok, cart[id].qty + 1);
+            }
             renderCart();
         }
         if (hapus) {
@@ -525,7 +567,7 @@
             <div class="flex justify-between items-center py-1.5 border-b border-slate-200/60 last:border-0">
                 <div class="flex flex-col">
                     <span class="text-slate-800 font-bold">${i.nama_buah}</span>
-                    <span class="text-slate-400 text-[10px] mt-0.5">${i.qty} x ${formatRupiah(i.subtotal/i.qty)}</span>
+                    <span class="text-slate-400 text-[10px] mt-0.5">${Number(i.qty).toLocaleString('id-ID', { maximumFractionDigits: 2 })} x ${formatRupiah(i.subtotal/i.qty)}</span>
                 </div>
                 <span class="font-bold text-slate-700">${formatRupiah(i.subtotal)}</span>
             </div>

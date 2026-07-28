@@ -24,6 +24,10 @@ class Restok extends Model
 
     protected $table = 'restok';
 
+    protected $casts = [
+        'jumlah' => 'float',
+    ];
+
     public function buah(): BelongsTo
     {
         return $this->belongsTo(Buah::class);

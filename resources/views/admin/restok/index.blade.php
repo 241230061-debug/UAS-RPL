@@ -32,7 +32,7 @@
             <div class="grid gap-4 md:grid-cols-2">
                 <div>
                     <label class="block mb-1.5 text-sm font-semibold text-slate-700">Jumlah (Kg)</label>
-                    <input type="number" name="jumlah" value="{{ old('jumlah') }}" placeholder="0" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm text-slate-800 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-all box-border" min="1" required>
+                    <input type="number" step="any" name="jumlah" value="{{ old('jumlah') }}" placeholder="0" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm text-slate-800 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-all box-border" min="0.01" required>
                     @error('jumlah')<p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror
                 </div>
                 <div>
@@ -76,7 +76,7 @@
                     </div>
 
                     <div class="mt-4 flex items-center justify-between pt-3 border-t border-dashed border-slate-200">
-                        <div class="text-xs text-slate-500">Jumlah: <span class="font-bold text-slate-800">{{ $item->jumlah }} Kg</span></div>
+                        <div class="text-xs text-slate-500">Jumlah: <span class="font-bold text-slate-800">{{ (float) $item->jumlah }} Kg</span></div>
                         <div class="text-sm font-extrabold text-brand-600">Rp {{ number_format($item->total_biaya, 0, ',', '.') }}</div>
                     </div>
 

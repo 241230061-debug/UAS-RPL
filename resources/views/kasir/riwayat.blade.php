@@ -52,6 +52,9 @@
                                 <div class="text-base font-black text-slate-800 tracking-tight mt-0.5 flex items-center gap-2">
                                     {{ $trx->kode_transaksi }}
                                 </div>
+                                <div class="text-xs font-semibold text-slate-500 mt-1">
+                                    Kasir: {{ $trx->user->name ?? '-' }}
+                                </div>
                             </div>
                         </div>
                         <div class="flex items-center gap-4">
@@ -67,7 +70,7 @@
                                     data-total="Rp {{ number_format($trx->total_harga, 0, ',', '.') }}"
                                     data-bayar="Rp {{ number_format($trx->bayar, 0, ',', '.') }}"
                                     data-kembalian="Rp {{ number_format($trx->kembalian, 0, ',', '.') }}"
-                                    data-items='{{ $trx->items->map(fn($i) => ["nama" => $i->buah->nama_buah ?? "Produk dihapus", "qty" => $i->qty, "harga" => "Rp " . number_format($i->harga, 0, ",", "."), "subtotal" => "Rp " . number_format($i->subtotal, 0, ",", ".")])->toJson() }}'>
+                                    data-items='{{ $trx->items->map(fn($i) => ["nama" => $i->buah->nama_buah ?? "Produk dihapus", "qty" => (float) $i->qty, "harga" => "Rp " . number_format($i->harga, 0, ",", "."), "subtotal" => "Rp " . number_format($i->subtotal, 0, ",", ".")])->toJson() }}'>
                                 Detail Transaksi
                             </button>
                         </div>
@@ -81,7 +84,7 @@
                                     <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
                                     <span class="font-bold text-slate-800">{{ $item->buah->nama_buah ?? 'Produk Terhapus' }}</span>
                                     <span class="text-[10px] font-bold text-slate-400 bg-white px-2 py-0.5 rounded-md border border-slate-200/60 shadow-sm select-none">
-                                        {{ $item->qty }} {{ $item->buah->satuan ?? 'Pcs' }}
+                                        {{ (float) $item->qty }} {{ $item->buah->satuan ?? 'Pcs' }}
                                     </span>
                                 </div>
                                 <span class="font-extrabold text-slate-700">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
@@ -147,7 +150,8 @@
 
         const items = JSON.parse(btn.dataset.items || '[]');
         document.getElementById('rw-items').innerHTML = items.map(function (i) {
-            return '<div class="flex justify-between items-start"><span class="text-slate-700">' + i.nama + '<br><span class="text-xs text-slate-400">' + i.qty + ' x ' + i.harga + '</span></span><span class="font-semibold text-slate-900">' + i.subtotal + '</span></div>';
+            const formattedQty = Number(i.qty).toLocaleString('id-ID', { maximumFractionDigits: 2 });
+            return '<div class="flex justify-between items-start"><span class="text-slate-700">' + i.nama + '<br><span class="text-xs text-slate-400">' + formattedQty + ' x ' + i.harga + '</span></span><span class="font-semibold text-slate-900">' + i.subtotal + '</span></div>';
         }).join('');
 
         modal.classList.remove('hidden');

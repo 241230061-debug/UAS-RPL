@@ -40,7 +40,7 @@ class KasirController extends Controller
         $data = $request->validate([
             'items' => ['required', 'array', 'min:1'],
             'items.*.buah_id' => ['required', 'integer', 'exists:buah,id'],
-            'items.*.qty' => ['required', 'integer', 'min:1'],
+            'items.*.qty' => ['required', 'numeric', 'gt:0'],
             'bayar' => ['required', 'integer', 'min:0'],
             'metode_pembayaran' => ['required', 'string', 'in:tunai,qris,debit'],
         ]);
@@ -51,7 +51,7 @@ class KasirController extends Controller
             ->groupBy('buah_id')
             ->map(fn ($group, $buahId) => [
                 'buah_id' => (int) $buahId,
-                'qty' => (int) $group->sum('qty'),
+                'qty' => (float) $group->sum('qty'),
             ])
             ->values();
 
@@ -83,7 +83,7 @@ class KasirController extends Controller
                         );
                     }
 
-                    $subtotal = $buah->harga * $item['qty'];
+                    $subtotal = (int) round($buah->harga * $item['qty']);
                     $totalHarga += $subtotal;
                     $detailItems[] = [
                         'buah_id' => $buah->id,
@@ -149,9 +149,10 @@ class KasirController extends Controller
      */
     public function riwayat(): View
     {
-        $transaksi = Transaksi::with('items.buah')
+        $transaksi = Transaksi::with(['items.buah', 'user'])
+            ->where('user_id', auth()->id())
             ->orderByDesc('created_at')
-            ->paginate(20);
+            ->paginate(10);
 
         return view('kasir.riwayat', compact('transaksi'));
     }
